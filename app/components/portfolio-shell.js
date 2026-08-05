@@ -27,8 +27,8 @@ export default function PortfolioShell({ children, page = 'home' }) {
   const playInteraction = (mode = 'click') => {
     if (typeof window === 'undefined') return;
 
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      navigator.vibrate(mode === 'hover' ? 8 : 12);
+    if (typeof navigator !== 'undefined' && navigator.vibrate && mode === 'click') {
+      navigator.vibrate(12);
     }
 
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -43,18 +43,42 @@ export default function PortfolioShell({ children, page = 'home' }) {
       ctx.resume();
     }
 
-    const oscillator = ctx.createOscillator();
+    const now = ctx.currentTime;
+    const tone = ctx.createOscillator();
+    const click = ctx.createOscillator();
+    const clack = ctx.createOscillator();
     const gain = ctx.createGain();
-    oscillator.type = mode === 'hover' ? 'triangle' : 'sine';
-    oscillator.frequency.setValueAtTime(mode === 'hover' ? 680 : 420, ctx.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(mode === 'hover' ? 760 : 300, ctx.currentTime + 0.12);
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.03, ctx.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
-    oscillator.connect(gain);
+
+    tone.type = 'square';
+    tone.frequency.setValueAtTime(760, now);
+    tone.frequency.exponentialRampToValueAtTime(420, now + 0.045);
+    tone.detune.value = -12;
+
+    click.type = 'triangle';
+    click.frequency.setValueAtTime(1400, now);
+    click.frequency.exponentialRampToValueAtTime(900, now + 0.04);
+    click.detune.value = 24;
+
+    clack.type = 'square';
+    clack.frequency.setValueAtTime(4000, now);
+    clack.frequency.exponentialRampToValueAtTime(2800, now + 0.02);
+    clack.detune.value = 0;
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.14, now + 0.007);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+    tone.connect(gain);
+    click.connect(gain);
+    clack.connect(gain);
     gain.connect(ctx.destination);
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.18);
+
+    tone.start(now);
+    click.start(now);
+    clack.start(now);
+    tone.stop(now + 0.06);
+    click.stop(now + 0.06);
+    clack.stop(now + 0.03);
   };
 
   const toggleTheme = () => {
@@ -90,35 +114,26 @@ export default function PortfolioShell({ children, page = 'home' }) {
       setParallaxOffset(Math.min(window.scrollY * 0.18, 70));
     };
 
-    const handleHover = (event) => {
-      const target = event.target;
-      if (target instanceof HTMLElement && target.closest('.interactive-word, .mini-card, .info-card, .project-card, .experience-card, .button')) {
-        playInteraction('hover');
-      }
-    };
-
     const handleClick = (event) => {
       const target = event.target;
-      if (target instanceof HTMLElement && target.closest('button, a, .interactive-word, .mini-card, .info-card, .project-card, .experience-card')) {
+      if (target instanceof HTMLElement && target.closest('.button, button')) {
         playInteraction('click');
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('mouseover', handleHover);
     document.addEventListener('click', handleClick);
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('mouseover', handleHover);
       document.removeEventListener('click', handleClick);
     };
   }, []);
 
   return (
-    <main className="page-shell" key={pathname || page}>
-      <section className="dashboard">
+      <main className="page-shell" key={pathname || page}>
+        <section className="dashboard">
         <nav className="top-nav">
           <Link href="/" className="brand-mark">
             GS
@@ -129,7 +144,6 @@ export default function PortfolioShell({ children, page = 'home' }) {
             aria-label="Toggle navigation"
             onClick={(event) => {
               event.stopPropagation();
-              playInteraction('click');
               setMenuOpen((prev) => !prev);
             }}
           >
@@ -143,10 +157,10 @@ export default function PortfolioShell({ children, page = 'home' }) {
             ))}
           </div>
           <div className="nav-actions">
-            <button className="button small-button ghost-button" type="button" onClick={() => { playInteraction('click'); toggleTheme(); }}>
+            <button className="button small-button ghost-button" type="button" onClick={toggleTheme}>
               {isDark ? 'Light' : 'Dark'}
             </button>
-            <a className="button small-button" href="/resume.pdf" target="_blank" rel="noreferrer" onClick={() => playInteraction('click')}>
+            <a className="button small-button" href="/resume.pdf" target="_blank" rel="noreferrer">
               Resume
             </a>
           </div>
@@ -164,7 +178,7 @@ export default function PortfolioShell({ children, page = 'home' }) {
               </p>
               <div className="actions">
                 {socialLinks.map((link) => (
-                  <a key={link.label} href={link.href} className="button" target="_blank" rel="noreferrer" onClick={() => playInteraction('click')}>
+                  <a key={link.label} href={link.href} className="button" target="_blank" rel="noreferrer">
                     {link.label}
                   </a>
                 ))}
