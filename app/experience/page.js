@@ -1,84 +1,62 @@
 import Link from 'next/link';
 import PortfolioShell from '../components/portfolio-shell';
-
-const experience = [
-  {
-    role: 'Android Developer',
-    company: 'MoneyView',
-    period: 'Feb 2023 — Present',
-    location: 'Bengaluru, India',
-    impact: [
-      'Delivered core Android product features for the loan journey while keeping the experience reliable and product-focused.',
-      'Built and scaled a referral system that supported user growth and stayed maintainable as the product evolved.',
-      'Improved packaging and performance, reducing APK size by 44% and making onboarding and updates feel lighter.',
-      'Contributed to product work that supported over Rs. 400+ Cr in loan disbursals.',
-    ],
-    stack: ['Android', 'Kotlin', 'Product Delivery', 'Performance'],
-  },
-  {
-    role: 'Independent Mobile Product Builder',
-    company: 'Personal Projects',
-    period: '2022 — Present',
-    location: 'Remote',
-    impact: [
-      'Built practical Android apps focused on clean UX, maintainable architecture, and thoughtful user journeys.',
-      'Explored AI-assisted experiences, Firebase integration, and modern Compose-based interfaces in real products.',
-      'Strengthened product thinking through side projects that balance design quality with practical implementation.',
-    ],
-    stack: ['Jetpack Compose', 'Firebase', 'MVVM', 'Material 3'],
-  },
-];
+import Reveal from '../components/reveal';
+import { ArrowIcon } from '../components/icons';
+import { experience } from '../data/profile';
 
 export default function ExperiencePage() {
   return (
-    <PortfolioShell page="experience">
-      <section className="content-section">
-        <div className="section-heading">
-          <p className="eyebrow">Experience</p>
-          <h2>Building product-minded Android experiences with measurable outcomes.</h2>
-          <p className="section-copy">
-            My work spans core feature delivery, product impact, and performance-focused engineering.
-          </p>
-        </div>
+    <PortfolioShell>
+      <section className="page-hero">
+        <div className="halftone" aria-hidden="true" />
+        <Reveal as="p" className="eyebrow">Experience</Reveal>
+        <Reveal as="h1" className="page-title" delay={60}>
+          A track record of <span className="pow">shipping</span>.
+        </Reveal>
+        <Reveal as="p" className="page-lead" delay={120}>
+          Core feature delivery, product impact and performance engineering — the work behind the numbers.
+        </Reveal>
+      </section>
 
+      <section className="section">
         <div className="timeline">
-          {experience.map((item) => (
-            <article key={item.role} className="timeline-item">
-              <div className="timeline-marker" />
-              <div className="timeline-content">
-                <div className="timeline-header">
+          {experience.map((item, i) => (
+            <Reveal key={item.role} className="timeline-item" delay={i * 90}>
+              <div className="timeline-node" aria-hidden="true" />
+              <div className="comic-panel timeline-panel">
+                <div className="timeline-head">
                   <div>
                     <h3>{item.role}</h3>
-                    <p>{item.company} • {item.location}</p>
+                    <p className="timeline-company">{item.company} · {item.location}</p>
                   </div>
-                  <span>{item.period}</span>
+                  <span className="timeline-period">{item.period}</span>
                 </div>
-
-                <ul className="timeline-points">
+                <ul className="bullet-list">
                   {item.impact.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
                 </ul>
-
                 <div className="chip-row">
                   {item.stack.map((tag) => (
-                    <span key={tag} className="chip">
-                      {tag}
-                    </span>
+                    <span key={tag} className="chip">{tag}</span>
                   ))}
                 </div>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      <div className="footer-cta">
-        <p>Focused on shipping Android experiences that are reliable, scalable, and built for real business impact.</p>
-        <Link href="/projects" className="button secondary-button">
-          Explore projects
-        </Link>
-      </div>
+      <section className="section cta-section">
+        <Reveal className="cta-panel">
+          <p className="eyebrow">Next</p>
+          <h2>See the side projects too.</h2>
+          <div className="hero-cta">
+            <Link href="/projects" className="button">Explore projects <ArrowIcon /></Link>
+            <Link href="/contact" className="button ghost-button">Get in touch</Link>
+          </div>
+        </Reveal>
+      </section>
     </PortfolioShell>
   );
 }
