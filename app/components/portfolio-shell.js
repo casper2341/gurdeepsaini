@@ -20,11 +20,13 @@ export default function PortfolioShell({ children }) {
   const [isDark, setIsDark] = useState(true);
   const audioContextRef = useRef(null);
 
-  const playInteraction = (mode = 'click') => {
+  // Synthesized mechanical keyboard press: a sharp filtered-noise "click" (the
+  // switch snapping) layered over a short low "thock" (the keycap bottoming out).
+  const playInteraction = () => {
     if (typeof window === 'undefined') return;
 
-    if (typeof navigator !== 'undefined' && navigator.vibrate && mode === 'click') {
-      navigator.vibrate(12);
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(8);
     }
 
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -38,30 +40,43 @@ export default function PortfolioShell({ children }) {
     if (ctx.state === 'suspended') ctx.resume();
 
     const now = ctx.currentTime;
-    const tone = ctx.createOscillator();
-    const click = ctx.createOscillator();
-    const gain = ctx.createGain();
 
-    tone.type = 'square';
-    tone.frequency.setValueAtTime(760, now);
-    tone.frequency.exponentialRampToValueAtTime(420, now + 0.045);
+    // --- the click: a tiny decaying burst of band-passed white noise ---
+    const noiseDur = 0.028;
+    const frames = Math.max(1, Math.ceil(ctx.sampleRate * noiseDur));
+    const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < frames; i += 1) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const bandpass = ctx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.value = 2700;
+    bandpass.Q.value = 0.8;
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.55, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + noiseDur);
+    noise.connect(bandpass);
+    bandpass.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    noise.start(now);
+    noise.stop(now + noiseDur);
 
-    click.type = 'triangle';
-    click.frequency.setValueAtTime(1400, now);
-    click.frequency.exponentialRampToValueAtTime(900, now + 0.04);
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.12, now + 0.007);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
-    tone.connect(gain);
-    click.connect(gain);
-    gain.connect(ctx.destination);
-
-    tone.start(now);
-    click.start(now);
-    tone.stop(now + 0.06);
-    click.stop(now + 0.06);
+    // --- the thock: short low body that bottoms out fast ---
+    const thock = ctx.createOscillator();
+    thock.type = 'triangle';
+    thock.frequency.setValueAtTime(190, now);
+    thock.frequency.exponentialRampToValueAtTime(90, now + 0.05);
+    const thockGain = ctx.createGain();
+    thockGain.gain.setValueAtTime(0.0001, now);
+    thockGain.gain.linearRampToValueAtTime(0.26, now + 0.004);
+    thockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+    thock.connect(thockGain);
+    thockGain.connect(ctx.destination);
+    thock.start(now);
+    thock.stop(now + 0.07);
   };
 
   const toggleTheme = () => {
