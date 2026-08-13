@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -iE '\\(background|color|--[a-z-]+|#[0-9a-fA-F]{3,6}\\)' app/globals.css)"
+    ]
+  }
+}

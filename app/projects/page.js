@@ -4,6 +4,13 @@ import Reveal from '../components/reveal';
 import { ArrowIcon, ExternalIcon } from '../components/icons';
 import { projects } from '../data/profile';
 
+export const metadata = {
+  title: 'Projects',
+  description:
+    'A collection of Android and Kotlin projects by Gurdeep Saini — Jetpack Compose, Firebase, Room, WorkManager, GenAI and more.',
+  alternates: { canonical: '/projects' },
+};
+
 export default function ProjectsPage() {
   return (
     <PortfolioShell>

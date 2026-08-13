@@ -1,5 +1,10 @@
 // Single source of truth for site content — pulled from Gurdeep's resume.
 
+// Canonical production URL. Override with NEXT_PUBLIC_SITE_URL at build time.
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://gurdeepsaini.com'
+).replace(/\/$/, '');
+
 export const profile = {
   name: 'Gurdeep Saini',
   role: 'Android Developer',

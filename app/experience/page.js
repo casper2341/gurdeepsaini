@@ -4,6 +4,13 @@ import Reveal from '../components/reveal';
 import { ArrowIcon } from '../components/icons';
 import { experience } from '../data/profile';
 
+export const metadata = {
+  title: 'Experience',
+  description:
+    "Gurdeep Saini's experience as an Android Developer at MoneyView — shipping production fintech features with Kotlin, Compose, KMP and measurable business impact.",
+  alternates: { canonical: '/experience' },
+};
+
 export default function ExperiencePage() {
   return (
     <PortfolioShell>

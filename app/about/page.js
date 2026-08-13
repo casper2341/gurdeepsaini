@@ -10,6 +10,13 @@ const highlights = [
   'Focused on production-grade features that stay reliable, maintainable and compliant.',
 ];
 
+export const metadata = {
+  title: 'About',
+  description:
+    'About Gurdeep Saini — an Android developer building scalable fintech apps with Jetpack Compose, MVVM/MVI, Clean Architecture and Kotlin Multiplatform.',
+  alternates: { canonical: '/about' },
+};
+
 export default function AboutPage() {
   return (
     <PortfolioShell>

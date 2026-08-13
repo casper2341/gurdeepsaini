@@ -10,6 +10,13 @@ const channels = [
   { label: 'Resume', value: 'Download PDF', href: '/resume.pdf', Icon: ResumeIcon },
 ];
 
+export const metadata = {
+  title: 'Contact',
+  description:
+    'Get in touch with Gurdeep Saini — Android Developer. Reach out by email, GitHub, LinkedIn, or download the resume.',
+  alternates: { canonical: '/contact' },
+};
+
 export default function ContactPage() {
   return (
     <PortfolioShell>
