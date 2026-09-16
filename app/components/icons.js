@@ -86,3 +86,28 @@ export function ExternalIcon() {
     </svg>
   );
 }
+
+export function PlusIcon() {
+  return (
+    <svg {...baseProps}>
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
+export function MinusIcon() {
+  return (
+    <svg {...baseProps}>
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
+
+export function ResetIcon() {
+  return (
+    <svg {...baseProps}>
+      <path d="M3 12a9 9 0 1 0 2.64-6.36L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  );
+}
