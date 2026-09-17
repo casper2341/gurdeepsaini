@@ -9,6 +9,8 @@ export const travelUrl = (
 export const travelSiteName = 'Gurdeep Saini · Travels';
 
 // `schema` is the schema.org type each spot gets in the city page's JSON-LD.
+// `residential` and `stays` are only for cities you've left (enforced below), and never name a
+// building, street or PG.
 export const categories = [
   { id: 'breweries', label: 'Breweries & taprooms', schema: 'Brewery' },
   { id: 'restaurants', label: 'Restaurants', schema: 'Restaurant' },
@@ -37,10 +39,10 @@ export const places = [
     slug: 'bengaluru',
     city: 'Bengaluru',
     country: 'India',
-    countryId: '356', // ISO 3166-1 NUMERIC, as world-atlas uses — not 'IN'
+    countryId: '356', // ISO 3166-1 NUMERIC, as the map data uses — not 'IN'
     coords: [77.5946, 12.9716], // [lng, lat] — d3 order, NOT lat/lng
     status: 'lived', // lived | visited | transit | wishlist
-    since: '2023-02',
+    since: '2023-02', // add `until: 'YYYY-MM'` once you've moved out
     blurb: 'Where I moved for MoneyView.',
     spots: [
       {
@@ -65,6 +67,8 @@ export const statusLabels = {
 
 // Fail the build on data mistakes that would otherwise break silently.
 const categoryIds = new Set(categories.map((category) => category.id));
+// Privacy: these would narrow down where you live now, so the current home city can't use them.
+const homeRevealingCategories = new Set(['residential', 'stays']);
 for (const place of places) {
   if (!/^\d{3}$/.test(place.countryId)) {
     throw new Error(`travel.js: ${place.slug} countryId must be ISO numeric like '356', got '${place.countryId}'`);
@@ -72,9 +76,15 @@ for (const place of places) {
   if (!statusLabels[place.status]) {
     throw new Error(`travel.js: ${place.slug} has unknown status '${place.status}'`);
   }
+  const isCurrentHome = place.status === 'lived' && !place.until;
   for (const spot of place.spots) {
     if (!categoryIds.has(spot.category)) {
       throw new Error(`travel.js: ${place.slug} → ${spot.name} has unknown category '${spot.category}'`);
+    }
+    if (isCurrentHome && homeRevealingCategories.has(spot.category)) {
+      throw new Error(
+        `travel.js: ${place.slug} → ${spot.name} uses '${spot.category}', which isn't allowed for your current home city`,
+      );
     }
   }
 }
@@ -116,11 +126,14 @@ export function formatMonth(yearMonth) {
   });
 }
 
-// 'Lived here since Feb 2023' · 'Visited in Dec 2024'
+// 'Lived here since Feb 2023' · 'Lived here Feb 2021 – Jan 2023' · 'Visited in Dec 2024'
 export function statusLine(place) {
   const label = statusLabels[place.status];
   if (!place.since) return label;
-  return `${label} ${place.status === 'lived' ? 'since' : 'in'} ${formatMonth(place.since)}`;
+  if (place.status !== 'lived') return `${label} in ${formatMonth(place.since)}`;
+  return place.until
+    ? `${label} ${formatMonth(place.since)} – ${formatMonth(place.until)}`
+    : `${label} since ${formatMonth(place.since)}`;
 }
 
 export function mapsHref(spot, place) {

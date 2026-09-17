@@ -73,7 +73,6 @@ const jsonLd = {
   jobTitle: profile.role,
   url: siteUrl,
   email: `mailto:${profile.email}`,
-  telephone: profile.phone,
   image: `${siteUrl}/icon.svg`,
   worksFor: {
     '@type': 'Organization',
@@ -95,10 +94,16 @@ const jsonLd = {
   ],
 };
 
+// Applies the saved theme (dark by default) before first paint. Without it, pages paint light and
+// flip to dark once React hydrates. ThemeToggle reads the class this sets.
+const themeScript = `try{document.body.classList.toggle('dark-theme',localStorage.getItem('theme')!=='light')}catch(e){document.body.classList.add('dark-theme')}`;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      {/* the theme script changes body's class before React hydrates */}
+      <body suppressHydrationWarning>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {children}
         <script
           type="application/ld+json"

@@ -19,11 +19,9 @@ export function ThemeToggle() {
     });
   };
 
+  // The inline script in app/layout.js has already applied the saved theme; sync the icon to it.
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem('theme');
-    const shouldUseDark = savedTheme ? savedTheme === 'dark' : true;
-    setIsDark(shouldUseDark);
-    document.body.classList.toggle('dark-theme', shouldUseDark);
+    setIsDark(document.body.classList.contains('dark-theme'));
   }, []);
 
   return (

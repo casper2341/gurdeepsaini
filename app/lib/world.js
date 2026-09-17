@@ -1,12 +1,12 @@
-// Server-only: projects world-atlas country outlines to SVG path strings once, at
-// build time. The browser only ever receives finished `d` strings and pin coords.
+// Server-only: projects country outlines to SVG path strings once, at build time.
+// The browser only ever receives finished `d` strings and pin coords.
 import { geoContains, geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
-import atlas from 'world-atlas/countries-110m.json';
+// Natural Earth, India point of view (official border), Antarctica dropped.
+// Regenerate with scripts/build-world-map.mjs.
+import world from './world-countries.json';
 
-const ANTARCTICA = '010';
-
-const features = feature(atlas, atlas.objects.countries).features.filter((f) => f.id !== ANTARCTICA);
+const features = feature(world, world.objects.countries).features;
 const collection = { type: 'FeatureCollection', features };
 
 export const MAP_WIDTH = 1000;
@@ -20,7 +20,7 @@ export const MAP_HEIGHT = Math.ceil(geoPath(projection).bounds(collection)[1][1]
 const toPath = geoPath(projection).digits(1);
 
 export const countries = features.map((f) => ({
-  id: f.id ?? f.properties.name, // N. Cyprus, Somaliland and Kosovo have no ISO id
+  id: f.id ?? f.properties.name, // Bir Tawil, Akrotiri, Dhekelia and Guantanamo Bay have no ISO id
   name: f.properties.name,
   d: toPath(f),
 }));
