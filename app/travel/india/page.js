@@ -2,6 +2,7 @@ import Link from 'next/link';
 import TravelShell from '../../components/travel/travel-shell';
 import IndiaMap from '../../components/travel/india-map';
 import Reveal from '../../components/reveal';
+import JsonLd from '../../components/json-ld';
 import { ArrowIcon } from '../../components/icons';
 import { states } from '../../lib/india';
 import { statesWithPlaces } from '../../lib/india-places';
@@ -116,10 +117,7 @@ export default function IndiaPage() {
         </Link>
       </nav>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
+      <JsonLd data={jsonLd} />
     </TravelShell>
   );
 }

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import TravelShell from '../../components/travel/travel-shell';
 import SpotFilter from '../../components/travel/spot-filter';
+import JsonLd from '../../components/json-ld';
 import { ArrowIcon } from '../../components/icons';
 import { profile } from '../../data/profile';
 import {
@@ -140,10 +141,7 @@ export default async function CityPage({ params }) {
         ) : null}
       </nav>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
+      <JsonLd data={jsonLd} />
     </TravelShell>
   );
 }

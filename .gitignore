@@ -2,3 +2,19 @@ node_modules
 .next
 out
 npm-debug.log*
+
+# env — values stay local; document the keys in .env.example instead
+.env
+.env*.local
+.env.production
+!.env.example
+
+# deploy
+.vercel
+
+# credentials
+*.pem
+
+# os / editor noise
+.DS_Store
+Thumbs.db

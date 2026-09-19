@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import TravelShell from '../../../components/travel/travel-shell';
 import StateMap from '../../../components/travel/state-map';
 import Reveal from '../../../components/reveal';
+import JsonLd from '../../../components/json-ld';
 import { ArrowIcon } from '../../../components/icons';
 import { getState, states } from '../../../lib/india';
 import { districtsWithPlaces, getStateMap } from '../../../lib/india-districts';
@@ -152,10 +153,7 @@ export default async function StatePage({ params }) {
         ) : null}
       </nav>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
+      <JsonLd data={jsonLd} />
     </TravelShell>
   );
 }

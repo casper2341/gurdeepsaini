@@ -11,7 +11,8 @@ export const profile = {
   company: 'MoneyView',
   location: 'Bengaluru, India',
   email: 'codegurdeep@gmail.com',
-  phone: '[removed]',
+  // No phone number here on purpose: nothing renders it, it's the first thing scrapers harvest,
+  // and `telephone` was deliberately left out of the JSON-LD too. Email is the contact channel.
   github: 'https://github.com/casper2341',
   linkedin: 'https://www.linkedin.com/in/gurdeep-saini-349a2227b/',
   tagline: 'I ship production Android for fintech — Kotlin, Compose, and the kind of details users never notice but always feel.',

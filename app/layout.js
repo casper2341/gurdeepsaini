@@ -1,4 +1,5 @@
 import './globals.css';
+import JsonLd from './components/json-ld';
 import { profile, siteUrl } from './data/profile';
 
 const description =
@@ -105,10 +106,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {children}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={jsonLd} />
       </body>
     </html>
   );

@@ -28,7 +28,15 @@
       "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe2.mjs http://travel.localhost:3212/ 360,740)",
       "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(s\\);console.log\\('navClipped:',j.navClipped,'| rows:',j.navRows,'| items:',j.nav.map\\(n=>n.t+':'+n.w\\).join\\(' '\\)\\)}\\)\")",
       "Bash('/c/Program Files/Google/Chrome/Application/chrome.exe' --headless --disable-gpu --hide-scrollbars --virtual-time-budget=6000 --window-size=1100,1250 --screenshot=C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/final-india.png http://travel.localhost:3212/india)",
-      "Bash(node -e \"const p=require\\('./node_modules/next/package.json'\\); console.log\\(p.version, JSON.stringify\\(p.engines\\)\\)\")"
+      "Bash(node -e \"const p=require\\('./node_modules/next/package.json'\\); console.log\\(p.version, JSON.stringify\\(p.engines\\)\\)\")",
+      "Bash(npm audit *)",
+      "Bash(npm view *)",
+      "Bash(npm ls *)",
+      "Bash(awk '{s+=$1} END {print s\" bytes across \"NR\" files\"}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -m 5 \"http://localhost:3000/does-not-exist\")",
+      "Bash(node -e \"console.log\\(require\\('./package.json'\\).dependencies.next\\)\")",
+      "Bash(npm install *)",
+      "Bash(node \"C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/9fbcad16-64cd-46ca-9db0-f4b3a9d8e221/scratchpad/escape-test.mjs\")"
     ]
   }
 }
