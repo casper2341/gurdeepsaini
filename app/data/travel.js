@@ -69,7 +69,12 @@ export const statusLabels = {
 const categoryIds = new Set(categories.map((category) => category.id));
 // Privacy: these would narrow down where you live now, so the current home city can't use them.
 const homeRevealingCategories = new Set(['residential', 'stays']);
+// City pages sit at the travel host root, so a slug can't collide with a page that lives there too.
+const reservedSlugs = new Set(['india']);
 for (const place of places) {
+  if (reservedSlugs.has(place.slug)) {
+    throw new Error(`travel.js: '${place.slug}' is a reserved route on the travel site — pick another slug`);
+  }
   if (!/^\d{3}$/.test(place.countryId)) {
     throw new Error(`travel.js: ${place.slug} countryId must be ISO numeric like '356', got '${place.countryId}'`);
   }

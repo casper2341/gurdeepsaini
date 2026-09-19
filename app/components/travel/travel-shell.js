@@ -19,6 +19,10 @@ export default function TravelShell({ active, children }) {
           <Link href="/" className={`nav-link ${active === 'map' ? 'active' : ''}`}>
             Map
           </Link>
+          {/* always in the viewport, and /india is ~26 KB of path strings */}
+          <Link href="/india" className={`nav-link ${active === 'india' ? 'active' : ''}`} prefetch={false}>
+            India
+          </Link>
           <Link href="/#places" className="nav-link">
             Places
           </Link>
@@ -54,7 +58,9 @@ export default function TravelShell({ active, children }) {
             </a>
           </div>
         </div>
-        <p className="footer-copy">Map outlines: Natural Earth · © {profile.name}</p>
+        <p className="footer-copy">
+          Map outlines: Natural Earth · India: Survey of India, via DataMeet · © {profile.name}
+        </p>
       </footer>
     </div>
   );

@@ -1,10 +1,14 @@
 import Link from 'next/link';
 import MapViewport from './map-viewport';
+import MapPin from './map-pin';
 import { countries, isInCountry, MAP_HEIGHT, MAP_WIDTH, project } from '../../lib/world';
 import { places, plural, statusLine, visitedCountryIds } from '../../data/travel';
 import { profile } from '../../data/profile';
 
 const visited = new Set(visitedCountryIds);
+// India is the one country with a map of its own behind it, so its shape is a link.
+const INDIA = '356';
+const india = countries.find((country) => country.id === INDIA);
 
 // Catches swapped [lat, lng] and wrong numeric country ids at build time. Warns
 // rather than throws: tiny or coastal places can fall outside the 1:110m outlines.
@@ -23,37 +27,45 @@ export default function WorldMap() {
       width={MAP_WIDTH}
       height={MAP_HEIGHT}
       label={`World map of places ${profile.name} has visited`}
+      hint="Drag to pan · pinch or Ctrl/⌘ + scroll to zoom · pick a red pin, or India for its states"
     >
       <g aria-hidden="true">
-        {countries.map((country) => (
-          <path
-            key={country.id}
-            d={country.d}
-            className={visited.has(country.id) ? 'country is-visited' : 'country'}
-          />
-        ))}
+        {countries
+          .filter((country) => country.id !== INDIA)
+          .map((country) => (
+            <path
+              key={country.id}
+              d={country.d}
+              className={visited.has(country.id) ? 'country is-visited' : 'country'}
+            />
+          ))}
       </g>
+
+      {/* after the country group so it's focusable, before the pins so they stay on top */}
+      {india ? (
+        <Link
+          href="/india"
+          className="map-region"
+          aria-label="India. Open the state and district maps"
+          data-title="India"
+          data-meta="See it state by state"
+          // /india is ~26 KB of path strings; don't fetch it just because the map is on screen
+          prefetch={false}
+        >
+          <path d={india.d} className={visited.has(INDIA) ? 'country is-visited' : 'country'} />
+        </Link>
+      ) : null}
       {places.map((place) => {
         const { x, y } = project(place.coords);
-        const meta = `${statusLine(place)} · ${plural(place.spots.length, 'spot')}`;
         return (
-          <g key={place.slug} transform={`translate(${x} ${y})`}>
-            <Link
-              href={`/${place.slug}`}
-              className={`map-pin is-${place.status}`}
-              aria-label={`${place.city}, ${place.country}. ${meta}`}
-              data-title={`${place.city}, ${place.country}`}
-              data-meta={meta}
-            >
-              {/* geometry is in screen px — CSS scales it by --u / --k */}
-              <g className="map-pin-body">
-                <circle className="map-pin-hit" r="14" />
-                <circle className="map-pin-pulse" r="7" />
-                <circle className="map-pin-shadow" cx="2" cy="2" r="7" />
-                <circle className="map-pin-dot" r="7" />
-              </g>
-            </Link>
-          </g>
+          <MapPin
+            key={place.slug}
+            place={place}
+            x={x}
+            y={y}
+            label={`${place.city}, ${place.country}`}
+            meta={`${statusLine(place)} · ${plural(place.spots.length, 'spot')}`}
+          />
         );
       })}
     </MapViewport>

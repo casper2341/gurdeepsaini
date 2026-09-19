@@ -940,6 +940,66 @@ p { line-height: 1.6; }
 }
 .country.is-visited { fill: var(--pop-5); }
 
+/* ---------- India: states and districts ---------- */
+/* India and its states are taller than they are wide. Capping the frame's WIDTH (using the map's
+   aspect, set inline by map-viewport.js) caps its height without letterboxing the SVG — which
+   matters because --u, the units-per-pixel that keeps pins 14px, assumes the SVG box and the
+   drawing are the same size. */
+.map-frame.is-fitted {
+  width: min(100%, calc(min(70vh, 620px) * var(--map-aspect)));
+  margin-inline: auto;
+}
+/* half of 9rem, so a balloon centred at the inset can't be clipped by the frame */
+.map-frame.is-fitted .map-balloon { max-width: 12rem; }
+
+/* Controls default to bottom-left (open South Pacific on the world map). Every India map picks its
+   emptiest corner instead — see emptiestCorner() in app/lib/india.js. Scoped under .map-frame to
+   out-specify the ≤560px rule below, which repositions .map-controls. */
+.map-frame .map-controls.is-top-left { top: 0.8rem; bottom: auto; }
+.map-frame .map-controls.is-top-right { top: 0.8rem; bottom: auto; left: auto; right: 0.8rem; }
+.map-frame .map-controls.is-bottom-right { left: auto; right: 0.8rem; }
+
+/* a region is a clickable shape: a state on the India map, India on the world map */
+.map-region { cursor: pointer; outline: none; }
+.map-region:hover .country,
+.map-region:focus-visible .country { stroke-width: 2.4px; }
+.map-region:focus-visible .country { stroke: var(--pop-3); }
+
+.district {
+  fill: var(--pop);
+  stroke: #14100c;        /* same dark ink as country borders, in both themes */
+  stroke-width: 0.4px;    /* thinner than a state border, so the two levels read apart */
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.district.is-visited { fill: var(--pop-5); }
+/* districts aren't links, but the balloon names them, so give the shape some feedback too */
+.district:hover { fill: var(--pop-5); }
+.district.is-visited:hover { fill: var(--pop-2); }
+
+/* every state, or every district, as plain text under the map */
+.region-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.region-link {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+}
+a.region-link:hover,
+a.region-link:focus-visible { background: var(--pop); box-shadow: var(--shadow-sm); }
+.region-link.is-visited { background: var(--pop-5); color: var(--on-pop); }
+
 /* pins: geometry is in screen px, so they keep one size across screens and zoom */
 .map-pin { cursor: pointer; outline: none; }
 .map-pin-body { transform: scale(calc(var(--u) / var(--k))); }

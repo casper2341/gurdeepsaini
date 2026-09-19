@@ -8,12 +8,32 @@ const MAX_ZOOM = 8;
 const BUTTON_STEP = 1.8;
 // a press only turns into a pan after moving this many px, so pins stay clickable
 const DRAG_THRESHOLD = 4;
+const HINT = 'Drag to pan · pinch or Ctrl/⌘ + scroll to zoom · pick a red pin';
+// how close to the frame's edges a balloon may sit before it's pulled back in
+const BALLOON_INSET = 96;
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-// Pan/zoom around the server-rendered world map. The view lives in a ref and is
-// written straight to the DOM, so dragging never re-renders the country paths.
-export default function MapViewport({ width, height, label, children }) {
+// Pan/zoom around a server-rendered map. The view lives in a ref and is written
+// straight to the DOM, so dragging never re-renders the country paths.
+//
+// `maxZoom`, `hint` and `balloonInset` default to what the world map needs; the India and state
+// maps are narrower and already zoomed in, so they pass their own.
+export default function MapViewport({
+  width,
+  height,
+  label,
+  hint = HINT,
+  maxZoom = MAX_ZOOM,
+  balloonInset = BALLOON_INSET,
+  // Sizes the frame from the map's own aspect rather than letting it run full width. India and its
+  // states need it — including the landscape ones like Meghalaya; the world map's 2:1 doesn't.
+  fitFrame = false,
+  // Which corner the zoom controls sit in. The world map's default is open South Pacific; each
+  // India map computes its own emptiest corner, because no single corner suits all 36 states.
+  controls = 'bottom-left',
+  children,
+}) {
   const frameRef = useRef(null);
   const svgRef = useRef(null);
   const layerRef = useRef(null);
@@ -22,7 +42,7 @@ export default function MapViewport({ width, height, label, children }) {
   const [tip, setTip] = useState(null);
 
   const apply = (next, animate = false) => {
-    const k = clamp(next.k, MIN_ZOOM, MAX_ZOOM);
+    const k = clamp(next.k, MIN_ZOOM, maxZoom);
     // the map always covers the frame — it can't be flung off-screen
     const x = clamp(next.x, width - width * k, 0);
     const y = clamp(next.y, height - height * k, 0);
@@ -30,14 +50,14 @@ export default function MapViewport({ width, height, label, children }) {
     layerRef.current.classList.toggle('is-animating', animate);
     layerRef.current.style.transform = `translate(${x}px, ${y}px) scale(${k})`;
     svgRef.current.style.setProperty('--k', k);
-    setLevel(k <= MIN_ZOOM ? 'min' : k >= MAX_ZOOM ? 'max' : 'mid');
+    setLevel(k <= MIN_ZOOM ? 'min' : k >= maxZoom ? 'max' : 'mid');
     setTip(null);
   };
 
   // zoom by `factor` while keeping viewBox point (px, py) fixed on screen
   const zoomAt = (factor, px, py, animate) => {
     const { k, x, y } = view.current;
-    const nextK = clamp(k * factor, MIN_ZOOM, MAX_ZOOM);
+    const nextK = clamp(k * factor, MIN_ZOOM, maxZoom);
     const ratio = nextK / k;
     apply({ k: nextK, x: px - (px - x) * ratio, y: py - (py - y) * ratio }, animate);
   };
@@ -93,7 +113,7 @@ export default function MapViewport({ width, height, label, children }) {
       const spreadAfter = Math.hypot(next.x - other.x, next.y - other.y);
       const midBefore = { x: (prev.x + other.x) / 2, y: (prev.y + other.y) / 2 };
       const midAfter = { x: (next.x + other.x) / 2, y: (next.y + other.y) / 2 };
-      const nextK = clamp(k * (spreadBefore ? spreadAfter / spreadBefore : 1), MIN_ZOOM, MAX_ZOOM);
+      const nextK = clamp(k * (spreadBefore ? spreadAfter / spreadBefore : 1), MIN_ZOOM, maxZoom);
       const ratio = nextK / k;
       apply({
         k: nextK,
@@ -125,24 +145,38 @@ export default function MapViewport({ width, height, label, children }) {
     };
 
     const showTip = (event) => {
-      const pin = event.target.closest?.('.map-pin');
-      if (!pin || frame.classList.contains('is-dragging')) return;
+      const target = event.target.closest?.('[data-title]');
+      if (!target || frame.classList.contains('is-dragging')) return;
       const box = frame.getBoundingClientRect();
-      const dot = pin.querySelector('.map-pin-dot').getBoundingClientRect();
-      const top = dot.top - box.top;
-      const below = top < 80; // no room above: hang the balloon under the pin
+      const dot = target.querySelector('.map-pin-dot');
+
+      // A pin anchors on its dot. A region — a country, state or district shape — has none: on
+      // hover it follows the pointer, because a multi-part state's box centre can be nowhere near
+      // what you're pointing at (Puducherry's box spans Mahe to Yanam). Keyboard focus carries no
+      // coordinates, so there it falls back to the shape's own box.
+      const anchor = dot
+        ? dot.getBoundingClientRect()
+        : event.clientX != null
+          ? { left: event.clientX, width: 0, top: event.clientY, bottom: event.clientY }
+          : target.getBoundingClientRect();
+
+      // the frame clips, and a zoomed-in region's box can run well outside it, so keep the
+      // balloon's anchor within the frame. A no-op for pins, which are always inside it.
+      const top = clamp(anchor.top - box.top, 0, box.height);
+      const bottom = clamp(anchor.bottom - box.top, 0, box.height);
+      const below = top < 80; // no room above: hang the balloon underneath instead
       setTip({
-        title: pin.dataset.title,
-        meta: pin.dataset.meta,
-        left: clamp(dot.left + dot.width / 2 - box.left, 96, box.width - 96),
-        top: below ? dot.bottom - box.top : top,
+        title: target.dataset.title,
+        meta: target.dataset.meta,
+        left: clamp(anchor.left + anchor.width / 2 - box.left, balloonInset, box.width - balloonInset),
+        top: below ? bottom : top,
         below,
       });
     };
 
     const hideTip = (event) => {
-      const pin = event.target.closest?.('.map-pin');
-      if (pin && !pin.contains(event.relatedTarget)) setTip(null);
+      const target = event.target.closest?.('[data-title]');
+      if (target && !target.contains(event.relatedTarget)) setTip(null);
     };
 
     const preventDefault = (event) => event.preventDefault();
@@ -173,11 +207,16 @@ export default function MapViewport({ width, height, label, children }) {
       listeners.forEach(([type, fn, options]) => svg.removeEventListener(type, fn, options));
       resize.disconnect();
     };
-  }, [width, height]);
+  }, [width, height, maxZoom, balloonInset]);
 
   return (
     <figure className="map-figure">
-      <div ref={frameRef} className="map-frame">
+      <div
+        ref={frameRef}
+        className={fitFrame ? 'map-frame is-fitted' : 'map-frame'}
+        // the CSS caps the frame's width by its height; it needs the map's aspect to do that
+        style={fitFrame ? { '--map-aspect': width / height } : undefined}
+      >
         <svg
           ref={svgRef}
           className={level === 'min' ? 'world-map' : 'world-map is-zoomed'}
@@ -190,7 +229,7 @@ export default function MapViewport({ width, height, label, children }) {
           </g>
         </svg>
 
-        <div className="map-controls">
+        <div className={controls === 'bottom-left' ? 'map-controls' : `map-controls is-${controls}`}>
           <button
             type="button"
             className="icon-button map-control"
@@ -231,9 +270,7 @@ export default function MapViewport({ width, height, label, children }) {
           </div>
         )}
       </div>
-      <figcaption className="map-hint">
-        Drag to pan · pinch or Ctrl/⌘ + scroll to zoom · pick a red pin
-      </figcaption>
+      <figcaption className="map-hint">{hint}</figcaption>
     </figure>
   );
 }

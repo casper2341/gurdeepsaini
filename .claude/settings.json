@@ -1,7 +1,33 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -iE '\\(background|color|--[a-z-]+|#[0-9a-fA-F]{3,6}\\)' app/globals.css)"
+      "Bash(grep -iE '\\(background|color|--[a-z-]+|#[0-9a-fA-F]{3,6}\\)' app/globals.css)",
+      "Bash(npm i *)",
+      "Bash(node -e \"const z=require\\('7zip-min'\\); console.log\\('7zip-min loaded', typeof z.unpack, typeof z.cmd\\)\")",
+      "Bash(curl -sL -o C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/india/SOI_States.geojsonl.7z https://github.com/ramSeraph/indian_admin_boundaries/releases/download/states/SOI_States.geojsonl.7z --max-time 300)",
+      "Bash(curl -sL -o C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/india/SOI_Districts.geojsonl.7z https://github.com/ramSeraph/indian_admin_boundaries/releases/download/districts/SOI_Districts.geojsonl.7z --max-time 600)",
+      "Bash(export SP=\"C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/india\")",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(node scripts/build-india-map.mjs)",
+      "Bash(node -e ' *)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3210/india 1280,900)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3210/india 400,800)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3210/ 400,800)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3210/india/karnataka 400,800)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3210/india/andaman-and-nicobar 1280,900)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3210/ 1280,900)",
+      "Bash(curl -s -o /dev/null --max-time 3 http://127.0.0.1:3211/travel)",
+      "Bash(break)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3211/india/karnataka 1280,900)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe.mjs http://travel.localhost:3211/india/uttar-pradesh 1280,900)",
+      "Bash(sed -n '/^\\\\.top-nav/,/^}/p' app/globals.css)",
+      "Bash(sed -n '/^\\\\.brand-mark/,/^}/p' app/globals.css)",
+      "Bash(grep -n \"^#\\\\{1,4\\\\} \" TRAVEL_PLAN.md)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe2.mjs http://travel.localhost:3212/india 360,740)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe2.mjs http://travel.localhost:3212/india 320,700)",
+      "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe2.mjs http://travel.localhost:3212/ 360,740)",
+      "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(s\\);console.log\\('navClipped:',j.navClipped,'| rows:',j.navRows,'| items:',j.nav.map\\(n=>n.t+':'+n.w\\).join\\(' '\\)\\)}\\)\")",
+      "Bash('/c/Program Files/Google/Chrome/Application/chrome.exe' --headless --disable-gpu --hide-scrollbars --virtual-time-budget=6000 --window-size=1100,1250 --screenshot=C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/final-india.png http://travel.localhost:3212/india)"
     ]
   }
 }
