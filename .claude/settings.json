@@ -27,7 +27,8 @@
       "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe2.mjs http://travel.localhost:3212/india 320,700)",
       "Bash(node C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/probe2.mjs http://travel.localhost:3212/ 360,740)",
       "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(s\\);console.log\\('navClipped:',j.navClipped,'| rows:',j.navRows,'| items:',j.nav.map\\(n=>n.t+':'+n.w\\).join\\(' '\\)\\)}\\)\")",
-      "Bash('/c/Program Files/Google/Chrome/Application/chrome.exe' --headless --disable-gpu --hide-scrollbars --virtual-time-budget=6000 --window-size=1100,1250 --screenshot=C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/final-india.png http://travel.localhost:3212/india)"
+      "Bash('/c/Program Files/Google/Chrome/Application/chrome.exe' --headless --disable-gpu --hide-scrollbars --virtual-time-budget=6000 --window-size=1100,1250 --screenshot=C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/6cdbc679-6f35-4560-a949-fef8bcacf978/scratchpad/final-india.png http://travel.localhost:3212/india)",
+      "Bash(node -e \"const p=require\\('./node_modules/next/package.json'\\); console.log\\(p.version, JSON.stringify\\(p.engines\\)\\)\")"
     ]
   }
 }
