@@ -47,7 +47,23 @@
       "Bash(git checkout *)",
       "Bash(git add *)",
       "Bash(git commit -q -m ' *)",
-      "Bash(git merge *)"
+      "Bash(git merge *)",
+      "Bash(git fetch *)",
+      "Bash(npm -v)",
+      "Bash(echo \"npm: $\\(npm -v\\)\")",
+      "Bash(cp app/data/travel.js /tmp/travel.backup.js)",
+      "Bash(curl -s -o /dev/null -w \"/ -> %{http_code}\\\\n\" -H \"Host: travel.localhost\" \"http://localhost:3000/\")",
+      "Bash(curl -s -H \"Host: travel.localhost\" \"http://localhost:3000/\")",
+      "Bash(curl -s -o /dev/null -w \"/bengaluru -> %{http_code}\\\\n\" -H \"Host: travel.localhost\" \"http://localhost:3000/bengaluru\")",
+      "Bash(curl -s -o /dev/null -w \"/india/karnataka -> %{http_code}\\\\n\" -H \"Host: travel.localhost\" \"http://localhost:3000/india/karnataka\")",
+      "Bash(node \"C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/05a4f07a-a127-48a8-9a50-cd18e8ba0113/scratchpad/s6-test.mjs\")",
+      "PowerShell(Get-NetTCPConnection -State Listen -LocalPort 3000,3001,3002,3100 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { try { Stop-Process -Id $_ -Force -ErrorAction Stop; \"stopped $_\" } catch { \"could not stop $_\" } }; Start-Sleep -Seconds 2; $left = Get-NetTCPConnection -State Listen -LocalPort 3000,3001,3002,3100 -ErrorAction SilentlyContinue; if \\($left\\) { \"still listening: \" + \\($left.LocalPort -join ','\\) } else { \"all dev/prod servers stopped\" })",
+      "Bash(node -e \"console.log\\(\\(require\\('fs'\\).readFileSync\\('.next/server/app/index.html','utf8'\\).match\\(/<meta name=\\\\\"theme-color\\\\\"[^>]*>/g\\)||[]\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(git stash *)",
+      "Bash(node \"C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/05a4f07a-a127-48a8-9a50-cd18e8ba0113/scratchpad/c4-equivalence.mjs\")"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
     ]
   }
 }
