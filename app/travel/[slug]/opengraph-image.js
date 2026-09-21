@@ -1,10 +1,17 @@
 import { ImageResponse } from 'next/og';
 import { profile } from '../../data/profile';
-import { getPlace, plural, spotsByCategory, statusLine, travelUrl } from '../../data/travel';
+import { getPlace, places, plural, spotsByCategory, statusLine, travelUrl } from '../../data/travel';
 
 export const alt = `A city guide from ${profile.name}'s travel map`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
+
+// Without this the card is the one route in the app rendered on demand — a cold serverless
+// invocation running Satori the first time a crawler or a chat app unfurls a city link. The city
+// list is known at build time, so prerender them all, exactly as the page beside this does.
+export function generateStaticParams() {
+  return places.map((place) => ({ slug: place.slug }));
+}
 
 // Theme tokens mirrored from globals.css (light "paper" palette).
 const paper = '#fdf3e3';
