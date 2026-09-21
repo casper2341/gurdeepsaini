@@ -36,7 +36,18 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -m 5 \"http://localhost:3000/does-not-exist\")",
       "Bash(node -e \"console.log\\(require\\('./package.json'\\).dependencies.next\\)\")",
       "Bash(npm install *)",
-      "Bash(node \"C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/9fbcad16-64cd-46ca-9db0-f4b3a9d8e221/scratchpad/escape-test.mjs\")"
+      "Bash(node \"C:/Users/Asus/AppData/Local/Temp/claude/c--Users-Asus-AndroidStudioProjects-gurdeepsaini/9fbcad16-64cd-46ca-9db0-f4b3a9d8e221/scratchpad/escape-test.mjs\")",
+      "Bash(echo \"--- exit: $? ---\")",
+      "Bash(grep -n \"^/\\\\*\\\\|^@media\\\\|^:root\\\\|^body\\\\|^\\\\.site\" app/globals.css)",
+      "Bash(grep -n \"jsconfig\\\\|paths\\\\|@/\\\\|alias\" TECH_ENHANCEMENTS.md)",
+      "Bash(grep -rn \"https://\\\\|http://\" app/ --include=*.js)",
+      "Bash(taskkill //F //IM node.exe //T)",
+      "Bash(cp app/components/reveal.js __TRACKED_VAR__/reveal.backup.js)",
+      "Bash(cp app/components/reveal.js /tmp/reveal.backup.js)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git merge *)"
     ]
   }
 }
