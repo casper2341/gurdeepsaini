@@ -452,6 +452,12 @@ p { line-height: 1.6; }
 }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* TypewriterText stops typing under reduced motion (the effect opts out — CSS can't reach a JS
+   timer), so the caret has nothing left to mark. Hide it rather than leave it blinking. */
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-cursor { display: none; }
+}
+
 /* ============================================================
    PAGE HERO (inner pages)
    ============================================================ */
