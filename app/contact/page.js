@@ -1,7 +1,7 @@
-import PortfolioShell from '../components/portfolio-shell';
-import Reveal from '../components/reveal';
-import { GithubIcon, LinkedinIcon, MailIcon, ResumeIcon } from '../components/icons';
-import { profile } from '../data/profile';
+import PortfolioShell from '@/components/portfolio-shell';
+import Reveal from '@/components/reveal';
+import { GithubIcon, LinkedinIcon, MailIcon, ResumeIcon } from '@/components/icons';
+import { profile } from '@/data/profile';
 
 const channels = [
   { label: 'Email', value: profile.email, href: `mailto:${profile.email}`, Icon: MailIcon },

@@ -6,7 +6,7 @@ import { geoContains, geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 // Natural Earth, India point of view (official border), Antarctica dropped.
 // Regenerate with scripts/build-world-map.mjs.
-import world from './world-countries.json';
+import world from '@/lib/world-countries.json';
 
 const features = feature(world, world.objects.countries).features;
 const collection = { type: 'FeatureCollection', features };

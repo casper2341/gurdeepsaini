@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import PortfolioShell from '../components/portfolio-shell';
-import Reveal from '../components/reveal';
-import { ArrowIcon } from '../components/icons';
-import { experience } from '../data/profile';
+import PortfolioShell from '@/components/portfolio-shell';
+import Reveal from '@/components/reveal';
+import { ArrowIcon } from '@/components/icons';
+import { experience } from '@/data/profile';
 
 export const metadata = {
   title: 'Experience',

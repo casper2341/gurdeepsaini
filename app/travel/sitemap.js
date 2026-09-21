@@ -1,5 +1,5 @@
-import { places, travelUrl } from '../data/travel';
-import { states } from '../lib/india';
+import { places, travelUrl } from '@/data/travel';
+import { states } from '@/lib/india';
 
 // Generated at /travel/sitemap.xml; proxy.js serves it as travel.gurdeepsaini.com/sitemap.xml.
 export default function sitemap() {

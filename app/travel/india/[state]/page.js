@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import TravelShell from '../../../components/travel/travel-shell';
-import StateMap from '../../../components/travel/state-map';
-import Reveal from '../../../components/reveal';
-import JsonLd from '../../../components/json-ld';
-import { ArrowIcon } from '../../../components/icons';
-import { getState, states } from '../../../lib/india';
-import { districtsWithPlaces, getStateMap } from '../../../lib/india-districts';
-import { placesInState } from '../../../lib/india-places';
-import { plural, statusLine, travelSiteName, travelUrl } from '../../../data/travel';
-import { profile } from '../../../data/profile';
+import TravelShell from '@/components/travel/travel-shell';
+import StateMap from '@/components/travel/state-map';
+import Reveal from '@/components/reveal';
+import JsonLd from '@/components/json-ld';
+import { ArrowIcon } from '@/components/icons';
+import { getState, states } from '@/lib/india';
+import { districtsWithPlaces, getStateMap } from '@/lib/india-districts';
+import { placesInState } from '@/lib/india-places';
+import { plural, statusLine, travelSiteName, travelUrl } from '@/data/travel';
+import { profile } from '@/data/profile';
 
 export const dynamicParams = false;
 

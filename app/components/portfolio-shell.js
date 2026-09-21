@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ClickSound, ThemeToggle } from './comic-chrome';
-import { GithubIcon, LinkedinIcon, MailIcon, ResumeIcon } from './icons';
-import { profile } from '../data/profile';
+import { ClickSound, ThemeToggle } from '@/components/comic-chrome';
+import { GithubIcon, LinkedinIcon, MailIcon, ResumeIcon } from '@/components/icons';
+import { profile } from '@/data/profile';
 
 const navItems = [
   { href: '/', label: 'Home' },

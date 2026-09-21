@@ -8,6 +8,10 @@ export const travelUrl = (
 
 export const travelSiteName = 'Gurdeep Saini · Travels';
 
+// A spot is: { name, category, area, note, rating, mapUrl, photo, tags } — and nothing else, since
+// an unknown key is rejected below rather than silently ignored. Only `name` and `category` are
+// required; the rest may be null.
+//
 // `schema` is the schema.org type each spot gets in the city page's JSON-LD.
 // `residential` and `stays` are only for cities you've left (enforced below), and never name a
 // building, street or PG.
@@ -53,6 +57,7 @@ export const places = [
         rating: 5,
         mapUrl: null, // null → a Google Maps search for name + area + city
         photo: null, // '/travel/blr/toit.jpg' later
+        tags: null, // free-form chips under the note, e.g. ['rooftop', 'no bookings']
       },
     ],
   },
@@ -67,6 +72,9 @@ export const statusLabels = {
 
 // Fail the build on data mistakes that would otherwise break silently.
 const categoryIds = new Set(categories.map((category) => category.id));
+// Every key a spot may carry. A misspelled one — `tag` for `tags`, `not` for `note` — is otherwise
+// just an ignored property: the field renders as missing and nothing says why.
+const spotKeys = new Set(['name', 'category', 'area', 'note', 'rating', 'mapUrl', 'photo', 'tags']);
 // Privacy: these would narrow down where you live now, so the current home city can't use them.
 const homeRevealingCategories = new Set(['residential', 'stays']);
 // City pages sit at the travel host root, so a slug can't collide with a page that lives there too.
@@ -83,8 +91,18 @@ for (const place of places) {
   }
   const isCurrentHome = place.status === 'lived' && !place.until;
   for (const spot of place.spots) {
+    for (const key of Object.keys(spot)) {
+      if (!spotKeys.has(key)) {
+        throw new Error(
+          `travel.js: ${place.slug} → ${spot.name} has unknown field '${key}' — known fields are ${[...spotKeys].join(', ')}`,
+        );
+      }
+    }
     if (!categoryIds.has(spot.category)) {
       throw new Error(`travel.js: ${place.slug} → ${spot.name} has unknown category '${spot.category}'`);
+    }
+    if (spot.tags != null && (!Array.isArray(spot.tags) || spot.tags.some((tag) => typeof tag !== 'string'))) {
+      throw new Error(`travel.js: ${place.slug} → ${spot.name} has a 'tags' that isn't an array of strings`);
     }
     if (isCurrentHome && homeRevealingCategories.has(spot.category)) {
       throw new Error(

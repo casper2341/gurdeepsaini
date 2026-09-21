@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import PortfolioShell from '../components/portfolio-shell';
-import Reveal from '../components/reveal';
-import { ArrowIcon, ExternalIcon } from '../components/icons';
-import { projects } from '../data/profile';
+import PortfolioShell from '@/components/portfolio-shell';
+import Reveal from '@/components/reveal';
+import { ArrowIcon, ExternalIcon } from '@/components/icons';
+import { projects } from '@/data/profile';
 
 export const metadata = {
   title: 'Projects',

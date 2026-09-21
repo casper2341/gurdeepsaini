@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MinusIcon, PlusIcon, ResetIcon } from '../icons';
+import { MinusIcon, PlusIcon, ResetIcon } from '@/components/icons';
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 8;
@@ -41,6 +41,10 @@ export default function MapViewport({
   const [level, setLevel] = useState('min'); // min | mid | max — drives the buttons
   const [tip, setTip] = useState(null);
 
+  // Runs on every pointermove during a drag. The two setState calls below look like a re-render per
+  // frame and aren't: `level` is one of three strings and `tip` is already null mid-drag, so React
+  // bails out on the Object.is check. That's what makes the "dragging never re-renders" claim above
+  // true — so if either ever becomes an object, this starts re-rendering the whole map per frame.
   const apply = (next, animate = false) => {
     const k = clamp(next.k, MIN_ZOOM, maxZoom);
     // the map always covers the frame — it can't be flung off-screen

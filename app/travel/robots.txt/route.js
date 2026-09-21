@@ -1,4 +1,4 @@
-import { travelUrl } from '../../data/travel';
+import { travelUrl } from '@/data/travel';
 
 // robots.js is only honoured at the app root, so the travel host's robots.txt is a
 // plain route handler; proxy.js rewrites travel.gurdeepsaini.com/robots.txt here.

@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { ClickSound, ThemeToggle } from '../comic-chrome';
-import { GithubIcon, LinkedinIcon, MailIcon } from '../icons';
-import { profile, siteUrl } from '../../data/profile';
+import { ClickSound, ThemeToggle } from '@/components/comic-chrome';
+import { GithubIcon, LinkedinIcon, MailIcon } from '@/components/icons';
+import { profile, siteUrl } from '@/data/profile';
 
 // Travel-site chrome. `active` is passed in by each page rather than read from
 // usePathname(), which hydration-mismatches on pages served through proxy.js rewrites.

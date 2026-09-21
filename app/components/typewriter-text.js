@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { typewriterPhrases as PHRASES } from '../data/profile';
+import { typewriterPhrases as PHRASES } from '@/data/profile';
 
 // The home page's <h1>. Three things about it are deliberate:
 //

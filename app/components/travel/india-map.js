@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import MapViewport from './map-viewport';
-import MapPin from './map-pin';
-import { INDIA_SIZE, projectIndia, states } from '../../lib/india';
-import { indiaPlaces, statesWithPlaces } from '../../lib/india-places';
-import { plural, statusLine } from '../../data/travel';
-import { profile } from '../../data/profile';
+import MapViewport from '@/components/travel/map-viewport';
+import MapPin from '@/components/travel/map-pin';
+import { INDIA_SIZE, projectIndia, states } from '@/lib/india';
+import { indiaPlaces, statesWithPlaces } from '@/lib/india-places';
+import { plural, statusLine } from '@/data/travel';
+import { profile } from '@/data/profile';
 
 // Server-rendered map of India; MapViewport only adds pan/zoom around it.
 export default function IndiaMap() {

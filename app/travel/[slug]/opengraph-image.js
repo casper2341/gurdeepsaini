@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
-import { profile } from '../../data/profile';
-import { getPlace, places, plural, spotsByCategory, statusLine, travelUrl } from '../../data/travel';
+import { profile } from '@/data/profile';
+import { getPlace, places, plural, spotsByCategory, statusLine, travelUrl } from '@/data/travel';
 
 export const alt = `A city guide from ${profile.name}'s travel map`;
 export const size = { width: 1200, height: 630 };

@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import PortfolioShell from '../components/portfolio-shell';
-import Reveal from '../components/reveal';
-import { ArrowIcon } from '../components/icons';
-import { profile, skills, education, stats } from '../data/profile';
+import PortfolioShell from '@/components/portfolio-shell';
+import Reveal from '@/components/reveal';
+import { ArrowIcon } from '@/components/icons';
+import { profile, skills, education, stats } from '@/data/profile';
 
 const highlights = [
   'Android developer building scalable fintech apps with Jetpack Compose, MVVM/MVI and Clean Architecture.',

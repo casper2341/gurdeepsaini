@@ -4,8 +4,8 @@
 //
 // Deliberately free of any district import, so the /india page and its OG card don't pull the
 // 1.7 MB district file into their server bundle. District grouping lives in india-districts.js.
-import { stateIdForCoords } from './india';
-import { places } from '../data/travel';
+import { stateIdForCoords } from '@/lib/india';
+import { places } from '@/data/travel';
 
 const INDIA = '356';
 

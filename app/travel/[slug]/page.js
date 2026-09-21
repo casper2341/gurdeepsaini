@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import TravelShell from '../../components/travel/travel-shell';
-import SpotFilter from '../../components/travel/spot-filter';
-import JsonLd from '../../components/json-ld';
-import { ArrowIcon } from '../../components/icons';
-import { profile } from '../../data/profile';
+import TravelShell from '@/components/travel/travel-shell';
+import SpotFilter from '@/components/travel/spot-filter';
+import JsonLd from '@/components/json-ld';
+import { ArrowIcon } from '@/components/icons';
+import { profile } from '@/data/profile';
 import {
   adjacentPlaces,
   getPlace,
@@ -15,7 +15,7 @@ import {
   statusLine,
   travelSiteName,
   travelUrl,
-} from '../../data/travel';
+} from '@/data/travel';
 
 export const dynamicParams = false;
 

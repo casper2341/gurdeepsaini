@@ -1,4 +1,4 @@
-import { siteUrl } from './data/profile';
+import { siteUrl } from '@/data/profile';
 
 export default function sitemap() {
   const lastModified = new Date();

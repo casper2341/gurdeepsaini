@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import TravelShell from '../components/travel/travel-shell';
-import WorldMap from '../components/travel/world-map';
-import Reveal from '../components/reveal';
-import { ArrowIcon } from '../components/icons';
-import { places, plural, statusLine } from '../data/travel';
+import TravelShell from '@/components/travel/travel-shell';
+import WorldMap from '@/components/travel/world-map';
+import Reveal from '@/components/reveal';
+import { ArrowIcon } from '@/components/icons';
+import { places, plural, statusLine } from '@/data/travel';
 
 export default function TravelMap() {
   return (

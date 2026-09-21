@@ -1,8 +1,8 @@
 import { ImageResponse } from 'next/og';
-import { profile } from '../../data/profile';
-import { travelUrl } from '../../data/travel';
-import { INDIA_SIZE, projectIndia, states } from '../../lib/india';
-import { indiaPlaces, statesWithPlaces } from '../../lib/india-places';
+import { profile } from '@/data/profile';
+import { travelUrl } from '@/data/travel';
+import { INDIA_SIZE, projectIndia, states } from '@/lib/india';
+import { indiaPlaces, statesWithPlaces } from '@/lib/india-places';
 
 export const alt = `${profile.name}'s map of India, state by state`;
 export const size = { width: 1200, height: 630 };

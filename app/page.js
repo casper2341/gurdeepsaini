@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import PortfolioShell from './components/portfolio-shell';
-import TypewriterText from './components/typewriter-text';
-import Reveal from './components/reveal';
-import { ArrowDownIcon, ArrowIcon } from './components/icons';
-import { ApkChart, PhoneMock } from './components/illustrations';
-import { profile, stats, panels, projects } from './data/profile';
+import PortfolioShell from '@/components/portfolio-shell';
+import TypewriterText from '@/components/typewriter-text';
+import Reveal from '@/components/reveal';
+import { ArrowDownIcon, ArrowIcon } from '@/components/icons';
+import { ApkChart, PhoneMock } from '@/components/illustrations';
+import { profile, stats, panels, projects } from '@/data/profile';
 
 export default function Home() {
   return (

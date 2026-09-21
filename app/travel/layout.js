@@ -1,5 +1,5 @@
-import { profile } from '../data/profile';
-import { places, travelSiteName, travelUrl } from '../data/travel';
+import { profile } from '@/data/profile';
+import { places, travelSiteName, travelUrl } from '@/data/travel';
 
 const title = `Travels — ${profile.name}`;
 const description = `The places ${profile.name} has lived in and travelled to: a comic-style world map with a city guide behind every pin — breweries, gardens, restaurants, markets and more.`;

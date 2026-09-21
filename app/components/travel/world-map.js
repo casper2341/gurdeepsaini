@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import MapViewport from './map-viewport';
-import MapPin from './map-pin';
-import { countries, isInCountry, MAP_HEIGHT, MAP_WIDTH, project } from '../../lib/world';
-import { places, plural, statusLine, visitedCountryIds } from '../../data/travel';
-import { profile } from '../../data/profile';
+import MapViewport from '@/components/travel/map-viewport';
+import MapPin from '@/components/travel/map-pin';
+import { countries, isInCountry, MAP_HEIGHT, MAP_WIDTH, project } from '@/lib/world';
+import { places, plural, statusLine, visitedCountryIds } from '@/data/travel';
+import { profile } from '@/data/profile';
 
 const visited = new Set(visitedCountryIds);
 // India is the one country with a map of its own behind it, so its shape is a link.

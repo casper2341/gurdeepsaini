@@ -1,4 +1,4 @@
-import { ExternalIcon } from '../icons';
+import { ExternalIcon } from '@/components/icons';
 
 // One spot as a comic panel. `spot.mapHref` is resolved on the server (see mapsHref).
 export default function SpotCard({ spot }) {

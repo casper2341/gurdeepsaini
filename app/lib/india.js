@@ -10,7 +10,7 @@ import { geoConicConformal, geoContains, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 // Survey of India boundaries — the official border, including the full claimed extent of Jammu &
 // Kashmir and Ladakh. Regenerate both files with scripts/build-india-map.mjs.
-import statesTopo from './india-states.json';
+import statesTopo from '@/lib/india-states.json';
 
 // Lambert conformal conic with parallels either side of the country, the standard choice for India.
 // Mercator would stretch Ladakh against Kerala.
@@ -56,6 +56,8 @@ function emptiestCorner(collection, projection, width, height) {
   return CORNERS[best];
 }
 
+// Build-time only. emptiestCorner walks every projected vertex, and this runs once for India plus
+// once per state — 37 full walks per build. Fine there; don't reach for it in a request path.
 export function fitToBox(collection) {
   const projection = newProjection().fitSize([BOX - PAD * 2, BOX - PAD * 2], collection);
   const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(collection);

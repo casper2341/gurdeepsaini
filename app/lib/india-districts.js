@@ -7,9 +7,9 @@
 import 'server-only';
 import { geoContains, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
-import districtsTopo from './india-districts.json';
-import { displayName, fitToBox, toPoint } from './india';
-import { beenTo, groupByKey, stateIdOf } from './india-places';
+import districtsTopo from '@/lib/india-districts.json';
+import { displayName, fitToBox, toPoint } from '@/lib/india';
+import { beenTo, groupByKey, stateIdOf } from '@/lib/india-places';
 
 // Each state gets its own projection fitted to itself, so every state map fills the same frame.
 // Cached because a page and its components both ask for it.

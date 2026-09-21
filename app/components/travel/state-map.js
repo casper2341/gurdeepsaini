@@ -1,8 +1,8 @@
-import MapViewport from './map-viewport';
-import MapPin from './map-pin';
-import { districtsWithPlaces, getStateMap } from '../../lib/india-districts';
-import { placesInState } from '../../lib/india-places';
-import { plural, statusLine } from '../../data/travel';
+import MapViewport from '@/components/travel/map-viewport';
+import MapPin from '@/components/travel/map-pin';
+import { districtsWithPlaces, getStateMap } from '@/lib/india-districts';
+import { placesInState } from '@/lib/india-places';
+import { plural, statusLine } from '@/data/travel';
 
 // One state, drawn to fill the frame, with every district outlined. Districts aren't links —
 // there's nothing behind most of them — so they sit in an aria-hidden group and the district list

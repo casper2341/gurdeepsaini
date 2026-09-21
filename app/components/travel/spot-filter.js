@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import SpotCard from './spot-card';
+import SpotCard from '@/components/travel/spot-card';
 
 // Category chips + the spot sections they filter. The active chip is mirrored to
 // ?c= so a filtered view is shareable. It's read from window.location after mount

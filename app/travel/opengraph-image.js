@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
-import { profile } from '../data/profile';
-import { places, travelUrl, visitedCountryIds } from '../data/travel';
-import { countries, MAP_HEIGHT, MAP_WIDTH, project } from '../lib/world';
+import { profile } from '@/data/profile';
+import { places, travelUrl, visitedCountryIds } from '@/data/travel';
+import { countries, MAP_HEIGHT, MAP_WIDTH, project } from '@/lib/world';
 
 export const alt = `${profile.name}'s travel map`;
 export const size = { width: 1200, height: 630 };

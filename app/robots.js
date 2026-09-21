@@ -1,4 +1,4 @@
-import { siteUrl } from './data/profile';
+import { siteUrl } from '@/data/profile';
 
 export default function robots() {
   return {

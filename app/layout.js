@@ -1,6 +1,6 @@
 import './globals.css';
-import JsonLd from './components/json-ld';
-import { profile, siteUrl } from './data/profile';
+import JsonLd from '@/components/json-ld';
+import { profile, siteUrl } from '@/data/profile';
 
 const description =
   'Gurdeep Saini is an Android Developer at MoneyView in Bengaluru, building production fintech apps with Kotlin, Jetpack Compose, Kotlin Multiplatform and Clean Architecture.';
@@ -62,7 +62,11 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: '#0a0a0a',
+  // --paper from globals.css in each theme. The old fixed '#0a0a0a' matched neither palette.
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fdf3e3' },
+    { media: '(prefers-color-scheme: dark)', color: '#14161f' },
+  ],
   width: 'device-width',
   initialScale: 1,
 };
@@ -95,9 +99,13 @@ const jsonLd = {
   ],
 };
 
-// Applies the saved theme (dark by default) before first paint. Without it, pages paint light and
-// flip to dark once React hydrates. ThemeToggle reads the class this sets.
-const themeScript = `try{document.body.classList.toggle('dark-theme',localStorage.getItem('theme')!=='light')}catch(e){document.body.classList.add('dark-theme')}`;
+// Applies the theme before first paint. Without it, pages paint light and flip to dark once React
+// hydrates. ThemeToggle reads the class this sets.
+//
+// Order of precedence: an explicit choice the visitor made here, then the OS setting, then dark.
+// A visitor on a light-mode device used to get dark anyway, because a missing localStorage entry
+// read the same as "not light".
+const themeScript = `try{var s=localStorage.getItem('theme');document.body.classList.toggle('dark-theme',s?s==='dark':!matchMedia('(prefers-color-scheme: light)').matches)}catch(e){document.body.classList.add('dark-theme')}`;
 
 export default function RootLayout({ children }) {
   return (

@@ -1,22 +1,25 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MoonIcon, SunIcon } from './icons';
+import { MoonIcon, SunIcon } from '@/components/icons';
 
 // Interactive bits of the comic chrome shared by the portfolio and travel shells.
 
 export function ThemeToggle() {
   const [isDark, setIsDark] = useState(true);
 
+  // The body class is the source of truth, not `isDark` — two toggles mounted at once (header and
+  // a drawer, say) would otherwise each flip their own copy and drift apart.
   const toggleTheme = () => {
-    setIsDark((prev) => {
-      const next = !prev;
-      if (typeof document !== 'undefined') {
-        document.body.classList.toggle('dark-theme', next);
-        window.localStorage.setItem('theme', next ? 'dark' : 'light');
-      }
-      return next;
-    });
+    const next = !document.body.classList.contains('dark-theme');
+    document.body.classList.toggle('dark-theme', next);
+    try {
+      window.localStorage.setItem('theme', next ? 'dark' : 'light');
+    } catch {
+      // Safari in private mode throws on setItem; the class is already applied, so the theme still
+      // works for this page view and simply isn't remembered.
+    }
+    setIsDark(next);
   };
 
   // The inline script in app/layout.js has already applied the saved theme; sync the icon to it.
