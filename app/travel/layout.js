@@ -27,7 +27,7 @@ export const metadata = {
     card: 'summary_large_image',
     title,
     description,
-    creator: '@casper2341',
+    creator: profile.twitter,
   },
   category: 'travel',
 };

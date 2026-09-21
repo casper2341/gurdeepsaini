@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { comic, halftone, halftoneSize } from '@/data/theme';
 import { profile } from '@/data/profile';
 import { getPlace, places, plural, spotsByCategory, statusLine, travelUrl } from '@/data/travel';
 
@@ -13,12 +14,8 @@ export function generateStaticParams() {
   return places.map((place) => ({ slug: place.slug }));
 }
 
-// Theme tokens mirrored from globals.css (light "paper" palette).
-const paper = '#fdf3e3';
-const ink = '#14100c';
-const inkSoft = '#423a30';
-const pop = '#ffcf33';
-const pop2 = '#ff5d55';
+// The palette lives in one place now; see the warning in data/theme.js.
+const { paper, ink, inkSoft, pop, pop2 } = comic;
 
 export default async function Image({ params }) {
   const { slug } = await params;
@@ -38,8 +35,8 @@ export default async function Image({ params }) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           background: paper,
-          backgroundImage: 'radial-gradient(rgba(20,16,12,0.16) 2px, transparent 2px)',
-          backgroundSize: '26px 26px',
+          backgroundImage: halftone,
+          backgroundSize: halftoneSize,
           padding: '64px 72px',
           fontFamily: 'sans-serif',
         }}

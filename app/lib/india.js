@@ -12,6 +12,11 @@ import { feature } from 'topojson-client';
 // Kashmir and Ladakh. Regenerate both files with scripts/build-india-map.mjs.
 import statesTopo from '@/lib/india-states.json';
 
+// When scripts/build-india-map.mjs last regenerated india-states.json and india-districts.json.
+// It's the only thing that changes a state page, so it's what the sitemap reports as their lastmod.
+// Bump it when you re-run that script.
+export const BOUNDARIES_UPDATED = '2026-09-19';
+
 // Lambert conformal conic with parallels either side of the country, the standard choice for India.
 // Mercator would stretch Ladakh against Kerala.
 const newProjection = () => geoConicConformal().parallels([12, 32]).rotate([-82, 0]);
@@ -25,9 +30,20 @@ const PAD = 4;
 
 const CORNERS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 
-// Walks every projected vertex once and reports which corner of the box has the most empty space,
-// so the zoom controls can sit somewhere that isn't over land. A fixed corner can't work: the
-// emptiest one differs for India and for each of the 36 states.
+// GeoJSON nests coordinates to a different depth per geometry type — a Polygon is [ring][point],
+// a MultiPolygon [poly][ring][point] — so anything reading raw vertices has to recurse to the
+// [lng, lat] pairs. Both callers below did that with their own identical local walker.
+function forEachCoord(coords, fn) {
+  if (typeof coords[0] === 'number') {
+    fn(coords);
+    return;
+  }
+  for (const part of coords) forEachCoord(part, fn);
+}
+
+// Reports which corner of the box has the most empty space, so the zoom controls can sit somewhere
+// that isn't over land. A fixed corner can't work: the emptiest one differs for India and for each
+// of the 36 states.
 function emptiestCorner(collection, projection, width, height) {
   const corners = [
     [0, 0],
@@ -37,19 +53,16 @@ function emptiestCorner(collection, projection, width, height) {
   ];
   const nearest = [Infinity, Infinity, Infinity, Infinity];
 
-  const visit = (coords) => {
-    if (typeof coords[0] === 'number') {
+  for (const shape of collection.features) {
+    forEachCoord(shape.geometry.coordinates, (coords) => {
       const point = projection(coords);
       if (!point) return;
       for (let i = 0; i < corners.length; i += 1) {
         const distance = Math.hypot(point[0] - corners[i][0], point[1] - corners[i][1]);
         if (distance < nearest[i]) nearest[i] = distance;
       }
-      return;
-    }
-    for (const part of coords) visit(part);
-  };
-  for (const shape of collection.features) visit(shape.geometry.coordinates);
+    });
+  }
 
   let best = 0;
   for (let i = 1; i < nearest.length; i += 1) if (nearest[i] > nearest[best]) best = i;
@@ -132,15 +145,10 @@ const NEAR_DEGREES = 0.1;
 
 function nearestVertexDistance(coords, [lng, lat]) {
   let nearest = Infinity;
-  const visit = (part) => {
-    if (typeof part[0] === 'number') {
-      const distance = Math.hypot(part[0] - lng, part[1] - lat);
-      if (distance < nearest) nearest = distance;
-      return;
-    }
-    for (const child of part) visit(child);
-  };
-  visit(coords);
+  forEachCoord(coords, ([x, y]) => {
+    const distance = Math.hypot(x - lng, y - lat);
+    if (distance < nearest) nearest = distance;
+  });
   return nearest;
 }
 

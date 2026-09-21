@@ -13,7 +13,7 @@ import {
   plural,
   spotsByCategory,
   statusLine,
-  travelSiteName,
+  travelMetadata,
   travelUrl,
 } from '@/data/travel';
 
@@ -34,22 +34,11 @@ export async function generateMetadata({ params }) {
   const place = getPlace(slug);
   if (!place) return {};
 
-  const title = `${place.city}, ${place.country}`;
-  const description = describe(place);
-  return {
-    title,
-    description,
-    alternates: { canonical: `/${place.slug}` },
-    openGraph: {
-      type: 'website',
-      locale: 'en_US',
-      url: `/${place.slug}`,
-      siteName: travelSiteName,
-      title,
-      description,
-    },
-    twitter: { card: 'summary_large_image', title, description, creator: '@casper2341' },
-  };
+  return travelMetadata({
+    title: `${place.city}, ${place.country}`,
+    description: describe(place),
+    path: `/${place.slug}`,
+  });
 }
 
 export default async function CityPage({ params }) {

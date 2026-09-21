@@ -1,5 +1,6 @@
 import './globals.css';
 import JsonLd from '@/components/json-ld';
+import { comic, comicDark } from '@/data/theme';
 import { profile, siteUrl } from '@/data/profile';
 
 const description =
@@ -53,7 +54,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: `${profile.name} — ${profile.role}`,
     description,
-    creator: '@casper2341',
+    creator: profile.twitter,
   },
   icons: {
     icon: '/icon.svg',
@@ -62,10 +63,10 @@ export const metadata = {
 };
 
 export const viewport = {
-  // --paper from globals.css in each theme. The old fixed '#0a0a0a' matched neither palette.
+  // --paper in each theme. The old fixed '#0a0a0a' matched neither palette.
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fdf3e3' },
-    { media: '(prefers-color-scheme: dark)', color: '#14161f' },
+    { media: '(prefers-color-scheme: light)', color: comic.paper },
+    { media: '(prefers-color-scheme: dark)', color: comicDark.paper },
   ],
   width: 'device-width',
   initialScale: 1,

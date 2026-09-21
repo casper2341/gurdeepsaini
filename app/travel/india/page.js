@@ -6,26 +6,13 @@ import JsonLd from '@/components/json-ld';
 import { ArrowIcon } from '@/components/icons';
 import { states } from '@/lib/india';
 import { statesWithPlaces } from '@/lib/india-places';
-import { plural, travelSiteName, travelUrl } from '@/data/travel';
+import { plural, travelMetadata, travelUrl } from '@/data/travel';
 import { profile } from '@/data/profile';
 
 const title = 'India, state by state';
 const description = `Every state and union territory of India, with the ones ${profile.name} has spent time in picked out. Open a state to see its districts.`;
 
-export const metadata = {
-  title,
-  description,
-  alternates: { canonical: '/india' },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: '/india',
-    siteName: travelSiteName,
-    title,
-    description,
-  },
-  twitter: { card: 'summary_large_image', title, description, creator: '@casper2341' },
-};
+export const metadata = travelMetadata({ title, description, path: '/india' });
 
 export default function IndiaPage() {
   const named = states.filter((state) => state.id);

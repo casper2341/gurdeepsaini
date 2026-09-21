@@ -1,5 +1,6 @@
 // Single source of truth for travel.gurdeepsaini.com — the map, city pages,
 // sitemap and OG images all read from here. Adding a city = appending one object.
+import { profile } from '@/data/profile';
 
 // Canonical travel URL. Override with NEXT_PUBLIC_TRAVEL_URL at build time.
 export const travelUrl = (
@@ -47,6 +48,7 @@ export const places = [
     coords: [77.5946, 12.9716], // [lng, lat] — d3 order, NOT lat/lng
     status: 'lived', // lived | visited | transit | wishlist
     since: '2023-02', // add `until: 'YYYY-MM'` once you've moved out
+    updated: '2026-09-19', // YYYY-MM-DD, the sitemap's lastmod — bump when you add or edit spots
     blurb: 'Where I moved for MoneyView.',
     spots: [
       {
@@ -88,6 +90,10 @@ for (const place of places) {
   }
   if (!statusLabels[place.status]) {
     throw new Error(`travel.js: ${place.slug} has unknown status '${place.status}'`);
+  }
+  // The sitemap reads this as lastmod; a missing one would silently become an Invalid Date.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(place.updated ?? '') || Number.isNaN(Date.parse(place.updated))) {
+    throw new Error(`travel.js: ${place.slug} needs an 'updated' date as YYYY-MM-DD, got '${place.updated}'`);
   }
   const isCurrentHome = place.status === 'lived' && !place.until;
   for (const spot of place.spots) {
@@ -157,6 +163,26 @@ export function statusLine(place) {
   return place.until
     ? `${label} ${formatMonth(place.since)} – ${formatMonth(place.until)}`
     : `${label} since ${formatMonth(place.since)}`;
+}
+
+// One shape for every travel page's metadata. The four routes each hand-built this, which is ~15
+// lines apiece and one forgotten `canonical` away from a duplicate-content problem. `path` is
+// host-relative ('/', '/india', '/bengaluru') — the travel layout's metadataBase resolves it.
+export function travelMetadata({ title, description, path }) {
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type: 'website',
+      locale: 'en_US',
+      url: path,
+      siteName: travelSiteName,
+      title,
+      description,
+    },
+    twitter: { card: 'summary_large_image', title, description, creator: profile.twitter },
+  };
 }
 
 export function mapsHref(spot, place) {

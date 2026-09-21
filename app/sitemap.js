@@ -1,13 +1,11 @@
-import { siteUrl } from '@/data/profile';
+import { routes, siteUrl } from '@/data/profile';
 
+// The route list and its lastmod dates live in profile.js, so the nav and this file can't disagree.
 export default function sitemap() {
-  const lastModified = new Date();
-  const routes = ['', '/about', '/projects', '/experience', '/contact'];
-
   return routes.map((route) => ({
-    url: `${siteUrl}${route}`,
-    lastModified,
-    changeFrequency: route === '' ? 'monthly' : 'yearly',
-    priority: route === '' ? 1 : 0.8,
+    url: `${siteUrl}${route.href === '/' ? '' : route.href}`,
+    lastModified: new Date(route.updated),
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
   }));
 }

@@ -4,16 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ClickSound, ThemeToggle } from '@/components/comic-chrome';
-import { GithubIcon, LinkedinIcon, MailIcon, ResumeIcon } from '@/components/icons';
-import { profile } from '@/data/profile';
-
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/experience', label: 'Experience' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/contact', label: 'Contact' },
-];
+import { GithubIcon, LinkedinIcon, ResumeIcon } from '@/components/icons';
+import { SiteFooter, SiteSocials } from '@/components/site-chrome';
+import { profile, routes as navItems } from '@/data/profile';
 
 export default function PortfolioShell({ children }) {
   const pathname = usePathname();
@@ -77,54 +70,28 @@ export default function PortfolioShell({ children }) {
 
       <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
         <nav aria-label="Mobile">
-          {navItems.map((item) => (
+          {navItems.map((item, i) => (
             <Link
               key={item.href}
               href={item.href}
               className={`drawer-link ${pathname === item.href ? 'active' : ''}`}
               onClick={() => setMenuOpen(false)}
             >
-              <span className="drawer-index">0{navItems.indexOf(item) + 1}</span>
+              <span className="drawer-index">0{i + 1}</span>
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="drawer-socials">
-          <a className="icon-button" href={profile.github} target="_blank" rel="noreferrer" aria-label="GitHub">
-            <GithubIcon />
-          </a>
-          <a className="icon-button" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
-            <LinkedinIcon />
-          </a>
-          <a className="icon-button" href={`mailto:${profile.email}`} aria-label="Email">
-            <MailIcon />
-          </a>
-        </div>
+        <SiteSocials className="drawer-socials" />
       </div>
       {menuOpen && <div className="drawer-scrim" onClick={() => setMenuOpen(false)} />}
 
       <main className="site-main">{children}</main>
 
-      <footer className="site-footer">
-        <div className="footer-inner">
-          <div>
-            <p className="footer-name">{profile.name}</p>
-            <p className="footer-role">{profile.role} · {profile.location}</p>
-          </div>
-          <div className="footer-socials">
-            <a className="icon-button" href={profile.github} target="_blank" rel="noreferrer" aria-label="GitHub">
-              <GithubIcon />
-            </a>
-            <a className="icon-button" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
-              <LinkedinIcon />
-            </a>
-            <a className="icon-button" href={`mailto:${profile.email}`} aria-label="Email">
-              <MailIcon />
-            </a>
-          </div>
-        </div>
-        <p className="footer-copy">Built with Next.js · Kotlin at heart · © {profile.name}</p>
-      </footer>
+      <SiteFooter
+        tagline={`${profile.role} · ${profile.location}`}
+        copy={`Built with Next.js · Kotlin at heart · © ${profile.name}`}
+      />
     </div>
   );
 }

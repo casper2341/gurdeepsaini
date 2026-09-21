@@ -1,16 +1,13 @@
 import { ImageResponse } from 'next/og';
+import { comic, halftone, halftoneSize } from '@/data/theme';
 import { profile, stats } from '@/data/profile';
 
 export const alt = `${profile.name} — ${profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-// Theme tokens mirrored from globals.css (light "paper" palette).
-const paper = '#fdf3e3';
-const ink = '#14100c';
-const inkSoft = '#423a30';
-const pop = '#ffcf33';
-const pop3 = '#3b6cff';
+// The palette lives in one place now; see the warning in data/theme.js.
+const { paper, ink, inkSoft, pop, pop3 } = comic;
 
 export default function Image() {
   const headline = stats[0]; // "44% Smaller APK"
@@ -25,8 +22,8 @@ export default function Image() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           background: paper,
-          backgroundImage: `radial-gradient(${'rgba(20,16,12,0.16)'} 2px, transparent 2px)`,
-          backgroundSize: '26px 26px',
+          backgroundImage: halftone,
+          backgroundSize: halftoneSize,
           padding: '64px 72px',
           fontFamily: 'sans-serif',
           position: 'relative',

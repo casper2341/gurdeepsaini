@@ -5,6 +5,20 @@ export const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL || 'https://gurdeepsaini.com'
 ).replace(/\/$/, '');
 
+// The portfolio's routes, in nav order. PortfolioShell renders these as links and sitemap.js maps
+// them to URLs — one list, so adding a page can't leave it out of the sitemap.
+//
+// `updated` is the last time the page's copy meaningfully changed, in YYYY-MM-DD. It's the sitemap's
+// lastmod: stamping every URL with the build time told crawlers the field carries no information.
+// Bump it by hand when you rewrite a page; leaving it stale is better than a date that lies upward.
+export const routes = [
+  { href: '/', label: 'Home', updated: '2026-09-21', changeFrequency: 'monthly', priority: 1 },
+  { href: '/about', label: 'About', updated: '2026-09-19', changeFrequency: 'yearly', priority: 0.8 },
+  { href: '/experience', label: 'Experience', updated: '2026-09-19', changeFrequency: 'yearly', priority: 0.8 },
+  { href: '/projects', label: 'Projects', updated: '2026-09-19', changeFrequency: 'yearly', priority: 0.8 },
+  { href: '/contact', label: 'Contact', updated: '2026-09-19', changeFrequency: 'yearly', priority: 0.8 },
+];
+
 export const profile = {
   name: 'Gurdeep Saini',
   role: 'Android Developer',
@@ -13,6 +27,7 @@ export const profile = {
   email: 'codegurdeep@gmail.com',
   // No phone number here on purpose: nothing renders it, it's the first thing scrapers harvest,
   // and `telephone` was deliberately left out of the JSON-LD too. Email is the contact channel.
+  twitter: '@casper2341', // the `creator` on every page's twitter card
   github: 'https://github.com/casper2341',
   linkedin: 'https://www.linkedin.com/in/gurdeep-saini-349a2227b/',
   tagline: 'I ship production Android for fintech — Kotlin, Compose, and the kind of details users never notice but always feel.',

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { comic, halftone, halftoneSize } from '@/data/theme';
 import { profile } from '@/data/profile';
 import { travelUrl } from '@/data/travel';
 import { INDIA_SIZE, projectIndia, states } from '@/lib/india';
@@ -8,14 +9,8 @@ export const alt = `${profile.name}'s map of India, state by state`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-// Theme tokens mirrored from globals.css (light "paper" palette).
-const paper = '#fdf3e3';
-const paper2 = '#fff8ec';
-const ink = '#14100c';
-const inkSoft = '#423a30';
-const pop = '#ffcf33';
-const pop2 = '#ff5d55';
-const pop5 = '#ff9f1c';
+// The palette lives in one place now; see the warning in data/theme.js.
+const { paper, paper2, ink, inkSoft, pop, pop2, pop5 } = comic;
 
 export default function Image() {
   // India is portrait, so unlike the world card the map is narrow and there's room beside it
@@ -40,8 +35,8 @@ export default function Image() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           background: paper,
-          backgroundImage: 'radial-gradient(rgba(20,16,12,0.16) 2px, transparent 2px)',
-          backgroundSize: '26px 26px',
+          backgroundImage: halftone,
+          backgroundSize: halftoneSize,
           padding: '40px 56px 44px',
           fontFamily: 'sans-serif',
         }}

@@ -8,7 +8,7 @@ import { ArrowIcon } from '@/components/icons';
 import { getState, states } from '@/lib/india';
 import { districtsWithPlaces, getStateMap } from '@/lib/india-districts';
 import { placesInState } from '@/lib/india-places';
-import { plural, statusLine, travelSiteName, travelUrl } from '@/data/travel';
+import { plural, statusLine, travelMetadata, travelUrl } from '@/data/travel';
 import { profile } from '@/data/profile';
 
 export const dynamicParams = false;
@@ -32,23 +32,11 @@ export async function generateMetadata({ params }) {
   if (!state) return {};
 
   const map = getStateMap(state.id);
-  const title = `${state.name}, India`;
-  const description = describe(state, map.districts.length, placesInState(state.id));
-
-  return {
-    title,
-    description,
-    alternates: { canonical: `/india/${state.slug}` },
-    openGraph: {
-      type: 'website',
-      locale: 'en_US',
-      url: `/india/${state.slug}`,
-      siteName: travelSiteName,
-      title,
-      description,
-    },
-    twitter: { card: 'summary_large_image', title, description, creator: '@casper2341' },
-  };
+  return travelMetadata({
+    title: `${state.name}, India`,
+    description: describe(state, map.districts.length, placesInState(state.id)),
+    path: `/india/${state.slug}`,
+  });
 }
 
 export default async function StatePage({ params }) {

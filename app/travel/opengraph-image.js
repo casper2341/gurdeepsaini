@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { comic, halftone, halftoneSize } from '@/data/theme';
 import { profile } from '@/data/profile';
 import { places, travelUrl, visitedCountryIds } from '@/data/travel';
 import { countries, MAP_HEIGHT, MAP_WIDTH, project } from '@/lib/world';
@@ -7,14 +8,8 @@ export const alt = `${profile.name}'s travel map`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-// Theme tokens mirrored from globals.css (light "paper" palette).
-const paper = '#fdf3e3';
-const paper2 = '#fff8ec';
-const ink = '#14100c';
-const inkSoft = '#423a30';
-const pop = '#ffcf33';
-const pop2 = '#ff5d55';
-const pop5 = '#ff9f1c';
+// The palette lives in one place now; see the warning in data/theme.js.
+const { paper, paper2, ink, inkSoft, pop, pop2, pop5 } = comic;
 
 export default function Image() {
   const visited = new Set(visitedCountryIds);
@@ -32,8 +27,8 @@ export default function Image() {
           alignItems: 'center',
           justifyContent: 'space-between',
           background: paper,
-          backgroundImage: 'radial-gradient(rgba(20,16,12,0.16) 2px, transparent 2px)',
-          backgroundSize: '26px 26px',
+          backgroundImage: halftone,
+          backgroundSize: halftoneSize,
           padding: '40px 56px 52px',
           fontFamily: 'sans-serif',
         }}
