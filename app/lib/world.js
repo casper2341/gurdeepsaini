@@ -1,5 +1,7 @@
 // Server-only: projects country outlines to SVG path strings once, at build time.
 // The browser only ever receives finished `d` strings and pin coords.
+// Enforced, not just documented — see the note in india-districts.js.
+import 'server-only';
 import { geoContains, geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 // Natural Earth, India point of view (official border), Antarctica dropped.

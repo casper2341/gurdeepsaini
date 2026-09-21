@@ -2,6 +2,9 @@
 // that actually draw districts — the state map component and the state page — pull it into their
 // server bundle. Nothing here is ever reachable from a client component, so the JSON never lands
 // in a browser bundle at all.
+// Enforced, not just documented: importing this from a client component is now a build error
+// instead of 1.7 MB silently landing in a browser bundle.
+import 'server-only';
 import { geoContains, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import districtsTopo from './india-districts.json';

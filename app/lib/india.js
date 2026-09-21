@@ -4,6 +4,8 @@
 // The district half lives in india-districts.js, which imports the 1.7 MB district file. Keeping it
 // out of here means routes that only want state paths or slugs — the sitemap, the /india OG card —
 // don't drag that file into their server bundle.
+// Enforced, not just documented — see the note in india-districts.js.
+import 'server-only';
 import { geoConicConformal, geoContains, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 // Survey of India boundaries — the official border, including the full claimed extent of Jammu &
