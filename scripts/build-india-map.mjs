@@ -1,7 +1,13 @@
 // Regenerates the two files behind the India map:
 //
-//   app/lib/india-states.json     one TopoJSON of all states and UTs
-//   app/lib/india-districts.json  { "<state LGD code>": <TopoJSON of that state's districts> }
+//   app/lib/india-states.json          one TopoJSON of all states and UTs
+//   app/lib/districts/<state LGD>.json one TopoJSON per state, ~49 KB each
+//   app/lib/districts/manifest.json    { "<state LGD>": <district count> }
+//
+// One file per state rather than one 1.7 MB object: rendering a single state page used to parse
+// every state's districts, and static generation runs seven workers in parallel, so up to seven
+// copies of that parse were resident at once. The manifest exists so generateMetadata can report a
+// district count without pulling in any geometry at all.
 //
 // Source: Survey of India boundaries, republished by ramSeraph/indian_admin_boundaries as
 // CC0 (attribute DataMeet and Survey of India). These are the official borders — Jammu &
@@ -17,7 +23,7 @@
 //   npm i --no-save mapshaper@0.7.61 7zip-min
 //   node scripts/build-india-map.mjs
 import { createReadStream, createWriteStream, statSync } from 'node:fs';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { createInterface } from 'node:readline';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -32,7 +38,7 @@ const SOURCES = {
 };
 const OUT = {
   states: fileURLToPath(new URL('../app/lib/india-states.json', import.meta.url)),
-  districts: fileURLToPath(new URL('../app/lib/india-districts.json', import.meta.url)),
+  districts: fileURLToPath(new URL('../app/lib/districts/', import.meta.url)),
 };
 
 // How much of India's state map survives simplification. 0.3% lands at ~27 KB brotli of path
@@ -100,6 +106,19 @@ await mapshaper.runCommands(
 );
 console.log(`  ${OUT.states} — ${KB(statSync(OUT.states).size)}`);
 
+// GeoJSON nests coordinates to a different depth per geometry type, so recurse to the [lng, lat].
+function grow(coords, extent) {
+  if (typeof coords[0] === 'number') {
+    const [lng, lat] = coords;
+    if (lng < extent.minX) extent.minX = lng;
+    if (lng > extent.maxX) extent.maxX = lng;
+    if (lat < extent.minY) extent.minY = lat;
+    if (lat > extent.maxY) extent.maxY = lat;
+    return;
+  }
+  for (const part of coords) grow(part, extent);
+}
+
 // Which states exist, and how wide each one is, so simplification can scale to it.
 const districtsGeo = JSON.parse(await readFile(districtsInput, 'utf8'));
 const extents = new Map();
@@ -107,18 +126,16 @@ for (const feature of districtsGeo.features) {
   const lgd = feature.properties.State_LGD;
   if (!lgd) continue; // inter-state disputed slivers have no districts worth a page
   const extent = extents.get(lgd) ?? { minX: 180, maxX: -180, minY: 90, maxY: -90 };
-  JSON.stringify(feature.geometry.coordinates).replace(/\[(-?[\d.]+),(-?[\d.]+)\]/g, (match, lng, lat) => {
-    extent.minX = Math.min(extent.minX, +lng);
-    extent.maxX = Math.max(extent.maxX, +lng);
-    extent.minY = Math.min(extent.minY, +lat);
-    extent.maxY = Math.max(extent.maxY, +lat);
-    return match;
-  });
+  // Walk the rings directly. This used to stringify every coordinate in the country and regex the
+  // numbers back out of the text, which is both slower and a surprising thing to read.
+  grow(feature.geometry.coordinates, extent);
   extents.set(lgd, extent);
 }
 
 console.log(`Building districts for ${extents.size} states…`);
-const districts = {};
+await mkdir(OUT.districts, { recursive: true });
+const manifest = {};
+let districtBytes = 0;
 for (const [lgd, extent] of [...extents].sort((a, b) => a[0] - b[0])) {
   // rough metres across, enough to pick a simplification interval
   const midLat = ((extent.minY + extent.maxY) / 2) * (Math.PI / 180);
@@ -139,8 +156,15 @@ for (const [lgd, extent] of [...extents].sort((a, b) => a[0] - b[0])) {
       `-o "${out}" format=topojson quantization=1000000 id-field=key`,
     ].join(' '),
   );
-  districts[lgd] = JSON.parse(await readFile(out, 'utf8'));
+  const topo = JSON.parse(await readFile(out, 'utf8'));
+  const target = join(OUT.districts, `${lgd}.json`);
+  await writeFile(target, JSON.stringify(topo));
+  manifest[lgd] = topo.objects.districts.geometries.length;
+  districtBytes += statSync(target).size;
 }
 
-await writeFile(OUT.districts, JSON.stringify(districts));
-console.log(`  ${OUT.districts} — ${KB(statSync(OUT.districts).size)} (server-only)`);
+await writeFile(join(OUT.districts, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+console.log(
+  `  ${OUT.districts} — ${Object.keys(manifest).length} files, ${KB(districtBytes)} total, ` +
+    `${KB(districtBytes / Object.keys(manifest).length)} mean (server-only)`,
+);

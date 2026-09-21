@@ -7,9 +7,9 @@ import { plural, statusLine } from '@/data/travel';
 // One state, drawn to fill the frame, with every district outlined. Districts aren't links —
 // there's nothing behind most of them — so they sit in an aria-hidden group and the district list
 // on the page is what keyboards and screen readers get. Hovering one still names it.
-export default function StateMap({ state }) {
-  const map = getStateMap(state.id);
-  const visited = districtsWithPlaces(state.id);
+export default async function StateMap({ state }) {
+  // Both are cached per state, so awaiting them here costs nothing the page hasn't already paid.
+  const [map, visited] = await Promise.all([getStateMap(state.id), districtsWithPlaces(state.id)]);
   const pins = placesInState(state.id);
 
   return (

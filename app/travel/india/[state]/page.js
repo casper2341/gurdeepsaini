@@ -6,7 +6,7 @@ import Reveal from '@/components/reveal';
 import JsonLd from '@/components/json-ld';
 import { ArrowIcon } from '@/components/icons';
 import { getState, states } from '@/lib/india';
-import { districtsWithPlaces, getStateMap } from '@/lib/india-districts';
+import { districtCount, districtsWithPlaces, getStateMap } from '@/lib/india-districts';
 import { placesInState } from '@/lib/india-places';
 import { plural, statusLine, travelMetadata, travelUrl } from '@/data/travel';
 import { profile } from '@/data/profile';
@@ -31,10 +31,11 @@ export async function generateMetadata({ params }) {
   const state = getState(slug);
   if (!state) return {};
 
-  const map = getStateMap(state.id);
+  // The count comes from the manifest, so generating metadata for all 36 states loads no geometry
+  // at all — it used to pull in the whole district module for one number.
   return travelMetadata({
     title: `${state.name}, India`,
-    description: describe(state, map.districts.length, placesInState(state.id)),
+    description: describe(state, districtCount(state.id), placesInState(state.id)),
     path: `/india/${state.slug}`,
   });
 }
@@ -44,8 +45,7 @@ export default async function StatePage({ params }) {
   const state = getState(slug);
   if (!state) notFound();
 
-  const map = getStateMap(state.id);
-  const visited = districtsWithPlaces(state.id);
+  const [map, visited] = await Promise.all([getStateMap(state.id), districtsWithPlaces(state.id)]);
   const cities = placesInState(state.id);
 
   const index = named.findIndex((entry) => entry.id === state.id);
