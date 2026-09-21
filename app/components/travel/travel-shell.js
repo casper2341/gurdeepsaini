@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ClickSound, ThemeToggle } from '@/components/comic-chrome';
+import { ClickSound, SoundToggle, ThemeToggle } from '@/components/comic-chrome';
 import { SiteFooter } from '@/components/site-chrome';
 import { profile, siteUrl } from '@/data/profile';
 
@@ -32,6 +32,7 @@ export default function TravelShell({ active, children }) {
         </nav>
 
         <div className="nav-actions">
+          <SoundToggle />
           <ThemeToggle />
         </div>
       </header>

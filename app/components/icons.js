@@ -111,3 +111,23 @@ export function ResetIcon() {
     </svg>
   );
 }
+
+export function SoundOnIcon() {
+  return (
+    <svg {...baseProps}>
+      <path d="M11 5 6 9H2v6h4l5 4V5Z" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+    </svg>
+  );
+}
+
+export function SoundOffIcon() {
+  return (
+    <svg {...baseProps}>
+      <path d="M11 5 6 9H2v6h4l5 4V5Z" />
+      <path d="m17 9 4 6" />
+      <path d="m21 9-4 6" />
+    </svg>
+  );
+}

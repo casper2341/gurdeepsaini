@@ -349,8 +349,11 @@ p { line-height: 1.6; }
   transform: translateY(28px);
   transition: opacity 620ms cubic-bezier(.2,.7,.2,1), transform 620ms cubic-bezier(.2,.7,.2,1);
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
 }
+/* will-change promotes the element to its own compositor layer, so it only belongs on the ones
+   still waiting to animate. On :not(.is-visible) the projects page holds ~25 layers for a moment
+   instead of for the life of the page — the reveal runs once and never again. */
+.reveal:not(.is-visible) { will-change: opacity, transform; }
 .reveal.is-visible { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {

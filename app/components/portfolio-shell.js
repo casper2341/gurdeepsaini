@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ClickSound, ThemeToggle } from '@/components/comic-chrome';
+import { ClickSound, SoundToggle, ThemeToggle } from '@/components/comic-chrome';
 import { GithubIcon, LinkedinIcon, ResumeIcon } from '@/components/icons';
 import { SiteFooter, SiteSocials } from '@/components/site-chrome';
 import { profile, routes as navItems } from '@/data/profile';
@@ -49,6 +49,7 @@ export default function PortfolioShell({ children }) {
           <a className="icon-button" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
             <LinkedinIcon />
           </a>
+          <SoundToggle />
           <ThemeToggle />
           <a className="button small-button resume-link" href="/resume.pdf" target="_blank" rel="noreferrer">
             <ResumeIcon />
