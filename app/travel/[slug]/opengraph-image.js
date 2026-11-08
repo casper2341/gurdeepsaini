@@ -10,6 +10,10 @@ export const contentType = 'image/png';
 // Without this the card is the one route in the app rendered on demand — a cold serverless
 // invocation running Satori the first time a crawler or a chat app unfurls a city link. The city
 // list is known at build time, so prerender them all, exactly as the page beside this does.
+// generateStaticParams alone isn't enough: an unknown slug would still invoke this function at
+// request time. dynamicParams = false 404s it before it runs, as on the page.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return places.map((place) => ({ slug: place.slug }));
 }
