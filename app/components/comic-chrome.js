@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MoonIcon, SoundOffIcon, SoundOnIcon, SunIcon } from '@/components/icons';
 
 // Interactive bits of the comic chrome shared by the portfolio and travel shells.
@@ -67,83 +67,93 @@ export function ThemeToggle() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Click sound
+//
+// One AudioContext for the whole document, created on the first click and then kept. Every page
+// renders its own shell, so ClickSound unmounts on each client-side navigation. Closing the context
+// in that cleanup (as it used to) cut the ~70ms click off ~20ms in whenever the next page swapped in
+// quickly, which is why nav links clicked only some of the time. The document is the context's real
+// lifetime, and the browser releases it on unload.
+let audioContext = null;
+
+function getAudioContext() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return null;
+  if (!audioContext || audioContext.state === 'closed') audioContext = new AudioContext();
+  // 'suspended' before the first gesture, and 'interrupted' on iOS after a call or an app switch.
+  // Either way it has to be resumed or nothing plays; the old check only handled 'suspended'.
+  if (audioContext.state !== 'running') audioContext.resume().catch(() => {});
+  return audioContext;
+}
+
+// What clicks: buttons, the nav (the desktop links and the mobile drawer's), and the icon buttons.
+const CLICKABLE = '.button, button, .nav-link, .drawer-link, .icon-button';
+
+// Synthesized mechanical keyboard press: a sharp filtered-noise "click" (the switch snapping)
+// layered over a short low "thock" (the keycap bottoming out).
+function playClick() {
+  if (navigator.vibrate) {
+    navigator.vibrate(8);
+  }
+
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const now = ctx.currentTime;
+
+  // --- the click: a tiny decaying burst of band-passed white noise ---
+  const noiseDur = 0.028;
+  const frames = Math.max(1, Math.ceil(ctx.sampleRate * noiseDur));
+  const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < frames; i += 1) {
+    data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
+  }
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+  const bandpass = ctx.createBiquadFilter();
+  bandpass.type = 'bandpass';
+  bandpass.frequency.value = 2700;
+  bandpass.Q.value = 0.8;
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(0.55, now);
+  noiseGain.gain.exponentialRampToValueAtTime(0.001, now + noiseDur);
+  noise.connect(bandpass);
+  bandpass.connect(noiseGain);
+  noiseGain.connect(ctx.destination);
+  noise.start(now);
+  noise.stop(now + noiseDur);
+
+  // --- the thock: short low body that bottoms out fast ---
+  const thock = ctx.createOscillator();
+  thock.type = 'triangle';
+  thock.frequency.setValueAtTime(190, now);
+  thock.frequency.exponentialRampToValueAtTime(90, now + 0.05);
+  const thockGain = ctx.createGain();
+  thockGain.gain.setValueAtTime(0.0001, now);
+  thockGain.gain.linearRampToValueAtTime(0.26, now + 0.004);
+  thockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  thock.connect(thockGain);
+  thockGain.connect(ctx.destination);
+  thock.start(now);
+  thock.stop(now + 0.07);
+}
+
+function handleClick(event) {
+  // checked per click, so the toggle takes effect immediately rather than on the next mount
+  if (!isSoundOn()) return;
+  // Element, not HTMLElement: a click that lands on an icon targets the <svg> or its <path>, which
+  // are SVGElements. The old check skipped those, so the icon buttons only clicked when you hit
+  // their padding rather than the icon in the middle.
+  if (event.target instanceof Element && event.target.closest(CLICKABLE)) playClick();
+}
+
 export function ClickSound() {
-  const audioContextRef = useRef(null);
-
+  // Only the listener follows the component's lifetime; the AudioContext deliberately doesn't.
   useEffect(() => {
-    // Synthesized mechanical keyboard press: a sharp filtered-noise "click" (the
-    // switch snapping) layered over a short low "thock" (the keycap bottoming out).
-    const playInteraction = () => {
-      if (navigator.vibrate) {
-        navigator.vibrate(8);
-      }
-
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return;
-
-      if (!audioContextRef.current) {
-        audioContextRef.current = new AudioContext();
-      }
-
-      const ctx = audioContextRef.current;
-      if (ctx.state === 'suspended') ctx.resume();
-
-      const now = ctx.currentTime;
-
-      // --- the click: a tiny decaying burst of band-passed white noise ---
-      const noiseDur = 0.028;
-      const frames = Math.max(1, Math.ceil(ctx.sampleRate * noiseDur));
-      const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < frames; i += 1) {
-        data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
-      }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = 'bandpass';
-      bandpass.frequency.value = 2700;
-      bandpass.Q.value = 0.8;
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.55, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + noiseDur);
-      noise.connect(bandpass);
-      bandpass.connect(noiseGain);
-      noiseGain.connect(ctx.destination);
-      noise.start(now);
-      noise.stop(now + noiseDur);
-
-      // --- the thock: short low body that bottoms out fast ---
-      const thock = ctx.createOscillator();
-      thock.type = 'triangle';
-      thock.frequency.setValueAtTime(190, now);
-      thock.frequency.exponentialRampToValueAtTime(90, now + 0.05);
-      const thockGain = ctx.createGain();
-      thockGain.gain.setValueAtTime(0.0001, now);
-      thockGain.gain.linearRampToValueAtTime(0.26, now + 0.004);
-      thockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-      thock.connect(thockGain);
-      thockGain.connect(ctx.destination);
-      thock.start(now);
-      thock.stop(now + 0.07);
-    };
-
-    const handleClick = (event) => {
-      // checked per click, so the toggle takes effect immediately rather than on the next mount
-      if (!isSoundOn()) return;
-      const target = event.target;
-      if (target instanceof HTMLElement && target.closest('.button, button, .nav-link, .icon-button')) {
-        playInteraction();
-      }
-    };
     document.addEventListener('click', handleClick);
-    return () => {
-      document.removeEventListener('click', handleClick);
-      // an AudioContext is a real resource with an explicit release, and browsers cap how many can
-      // exist at once; it was previously held for the life of the page and never closed
-      audioContextRef.current?.close();
-      audioContextRef.current = null;
-    };
+    return () => document.removeEventListener('click', handleClick);
   }, []);
 
   return null;

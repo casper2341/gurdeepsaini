@@ -3,8 +3,18 @@ import Reveal from '@/components/reveal';
 import { GithubIcon, LinkedinIcon, MailIcon, ResumeIcon } from '@/components/icons';
 import { profile } from '@/data/profile';
 
+// Arial Black is wide, and a quarter-width card can't hold the address on one line. <wbr> offers a
+// break before the @, so it wraps as "codegurdeep / @gmail.com" rather than mid-word — and since it
+// adds no characters, copying the address still copies it whole.
+const [emailUser, emailDomain] = profile.email.split('@');
+
 const channels = [
-  { label: 'Email', value: profile.email, href: `mailto:${profile.email}`, Icon: MailIcon },
+  {
+    label: 'Email',
+    value: <>{emailUser}<wbr />@{emailDomain}</>,
+    href: `mailto:${profile.email}`,
+    Icon: MailIcon,
+  },
   { label: 'GitHub', value: 'casper2341', href: profile.github, Icon: GithubIcon },
   { label: 'LinkedIn', value: 'gurdeep-saini', href: profile.linkedin, Icon: LinkedinIcon },
   { label: 'Resume', value: 'Download PDF', href: '/resume.pdf', Icon: ResumeIcon },
